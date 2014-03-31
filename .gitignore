@@ -1,0 +1,9 @@
+# node.js modules
+/node_modules
+
+# IntelliJ IDEA project files
+pojisteni.iml
+pojisteni.ipr
+pojisteni.iws
+
+
