@@ -5,28 +5,13 @@
 
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var appconfig = require('./appconfig');
 
 var app = express();
 
-
-
-//  Set the environment variables we need.
-ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-
-if (typeof ipaddress === "undefined") {
-    //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
-    //  allows us to run/test the app locally.
-    console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
-    ipaddress = "127.0.0.1";
-}
-
-
 // all environments
-app.set('port', port);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -38,14 +23,20 @@ app.use(app.router);
 app.use(require('less-middleware')({ src: path.join(__dirname, 'public') }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+appconfig.loadRoutes(app);
+
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/users', user.list);
+//  Set the environment variables we need.
+var ipaddress = appconfig.getIp();
+var port = appconfig.getPort();
 
-http.createServer(app).listen(app.get('port'), ipaddress, function(){
-  console.log('Express server listening on port ' + app.get('port'));
+app.set('port', port);
+
+http.createServer(app).listen(port, ipaddress, function () {
+    console.log('Express server listening on port ' + port);
 });
