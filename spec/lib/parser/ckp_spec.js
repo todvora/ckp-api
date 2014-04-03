@@ -26,6 +26,7 @@ describe(__filename, function () {
             expect(results.type).toEqual("OSOBNÍ AUTOMOBILY");
             expect(results.manufacturer).toEqual("OPEL");
             expect(results.period).toEqual("24.3.2014 - neuvedeno");
+            expect(results.date_from).toEqual("2014-3-24");
             expect(results.company.name).toEqual("ČSOB POJIŠŤOVNA, A.S.");
             expect(results.company.tel).toEqual("800100777");
             expect(results.company.email).toEqual("info@csobpoj.cz");
