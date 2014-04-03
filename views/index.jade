@@ -1,5 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Informace o povinném ručení vozu
+  p Zadejte vaší RZ/SPZ a stiskněte tlačítko
+  input(type="text" id="regno")
+  input(type="submit" id="submit")
+  br
+  br
+  div(id="chart", width="500px", height="500px")
