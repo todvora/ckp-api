@@ -2,9 +2,9 @@ $(document).ready(function(){
     $('#submit').click(function() {
         var regno = $("#regno").val();
         var currentDate = new Date();
-        var formatedDate = currentDate.getDate() + "." + currentDate.getMonth() +"."+ currentDate.getFullYear();
+        var formatedDate = currentDate.getDate() + "." + (currentDate.getMonth()+1) +"."+ currentDate.getFullYear();
         $.getJSON('/api', { 'regno':regno, 'date':formatedDate}, function(data) {
-            console.log(data);
+
                 var container = document.getElementById('chart');
                 var chart = new google.visualization.Timeline(container);
                 var dataTable = new google.visualization.DataTable();
@@ -14,15 +14,20 @@ $(document).ready(function(){
             dataTable.addColumn({ type: 'date', id: 'Konec' });
 
 
-            var startDate = new Date(data.date_from);
-            var endDate = new Date();
-            if(data.date_till != null) {
-               endDate = new Date(data.date_till);
-            }
+            var rows = [];
+            $.each(data, function(index,item){
+                console.log(item);
+                var startDate = new Date(item.date_from);
+                var endDate = new Date();
+                if(item.date_till != null) {
+                    endDate = new Date(item.date_till);
+                }
+                var entry = [item.company.name, startDate, endDate];
+                rows.push(entry);
+            });
 
-            data
-            dataTable.addRows([
-                [ data.company.name,  startDate,  endDate ]]);
+
+            dataTable.addRows(rows);
 
             chart.draw(dataTable);
         });
