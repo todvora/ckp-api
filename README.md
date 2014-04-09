@@ -8,3 +8,7 @@ Unofficial API - liability insurance for damage caused by operation of vehicle d
 Demo
 ====
 You can try demo on [ckp-tdvorak.rhcloud.com](http://ckp-tdvorak.rhcloud.com/). Just enter your licence plate number and it will render history for last 48 months. 
+
+Tests
+=====
+Project contains [Jasmine tests](http://jasmine.github.io/). You can run them with command ```npm test```. 
