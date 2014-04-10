@@ -10,7 +10,7 @@
         "express": "3.5.1",
         "jade": "*",
         "less-middleware": "~0.1.15",
-        "cheerio": "*",
+        "cheerio": "0.13.x",
         "request": "*"
     },
     "devDependencies": {
