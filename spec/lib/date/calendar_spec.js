@@ -88,4 +88,23 @@ describe(__filename, function () {
 
         done();
     });
+
+    it("should handle daylight saving time", function (done) {
+        var cal = new calendar.Calendar(calendar.createDate(2014,1,1), calendar.createDate(2014,4,1));
+        cal.addInterval(calendar.createDate(2014,2,1), calendar.createDate(2014,4,1), {name:"CSOB"});
+
+        var intervals = cal.getAllIntervals();
+        expect(intervals.length).toEqual(2);
+
+        var insured = intervals[1];
+        expect(insured.start).toEqual(calendar.createDate(2014,2,1));
+        expect(insured.end).toEqual(calendar.createDate(2014,4,1));
+        expect(insured.value).toEqual({name:"CSOB"});
+
+        var voidOne = intervals[0];
+        expect(voidOne.start).toEqual(calendar.createDate(2014,1,1));
+        expect(voidOne.end).toEqual(calendar.createDate(2014,1,31));
+        expect(voidOne.value).toBeNull();
+        done();
+    });
 });
