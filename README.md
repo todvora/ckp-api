@@ -1,4 +1,4 @@
-ckp-api
+Pojisteni
 =======
 
 Unofficial API - liability insurance for damage caused by operation of vehicle data from ČKP (Czech Insurers Bureau)
