@@ -1,5 +1,7 @@
 $(document).ready(function(){
     $('#submit').click(function() {
+        var button = $(this);
+        button.button('loading');
         var regno = $("#regno").val();
         var currentDate = new Date();
         var formatedDate = currentDate.getDate() + "." + (currentDate.getMonth()+1) +"."+ currentDate.getFullYear();
@@ -30,6 +32,7 @@ $(document).ready(function(){
                 } else {
                     var entry = ["NEPOJIŠTĚNO!", new Date(item.start), new Date(item.end)];
                     rows.push(entry);
+                    $("#notinsured").show();
                 }
             });
 
@@ -37,6 +40,7 @@ $(document).ready(function(){
             dataTable.addRows(rows);
 
             chart.draw(dataTable);
+            button.button('reset');
         });
         return false; // prevent default
     });
