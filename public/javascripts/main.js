@@ -2,6 +2,7 @@ $(document).ready(function(){
     $('#submit').click(function() {
         var button = $(this);
         button.button('loading');
+        $("#notinsured").hide();
         var regno = $("#regno").val();
         var currentDate = new Date();
         var formatedDate = currentDate.getDate() + "." + (currentDate.getMonth()+1) +"."+ currentDate.getFullYear();
