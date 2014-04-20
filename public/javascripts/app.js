@@ -54,6 +54,7 @@ function checkInsured(items) {
 function renderItems(chart, items) {
     var dataTable = new google.visualization.DataTable();
     dataTable.addColumn({ type: 'string', id: 'Pojištění' });
+    dataTable.addColumn({ type: 'string', id: 'interval' });
     dataTable.addColumn({ type: 'date', id: 'Začátek' });
     dataTable.addColumn({ type: 'date', id: 'Konec' });
 
@@ -67,9 +68,11 @@ function renderItems(chart, items) {
                 endDate = new Date(item.date_till);
             }
             $("#type").html(item.manufacturer + " - " + item.spz + ", " + item.type);
-            rows.push([item.company.name, startDate, endDate]);
+            rows.push([item.company.name, item.period, startDate, endDate]);
         } else {
-            rows.push(["NEPOJIŠTĚNO!", new Date(item.get("start")), new Date(item.get("end"))]);
+            var from = new Date(item.get("start"));
+            var till = new Date(item.get("end"));
+            rows.push(["NEPOJIŠTĚNO!",dateToString(from) + "-" + dateToString(till) , from,till]);
         }
     });
 
