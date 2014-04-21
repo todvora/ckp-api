@@ -71,6 +71,9 @@ function getInsuranceCompanies(items) {
     return companies;
 }
 
+function wrapLabelWithDataspan(item, label) {
+    return "<div data-json='"+JSON.stringify(item.toJSON())+"'>" +label+ "</div>";
+}
 
 function renderItems(element, items) {
     var dataTable = new google.visualization.DataTable();
@@ -83,18 +86,18 @@ function renderItems(element, items) {
     var rows = [];
     _.each(items, function (item) {
         if (item.get("value") != null) {
-            item = item.get("value");
-            var startDate = new Date(item.date_from);
+            var value = item.get("value");
+            var startDate = new Date(value.date_from);
             var endDate = new Date();
-            if (item.date_till != null) {
-                endDate = new Date(item.date_till);
+            if (value.date_till != null) {
+                endDate = new Date(value.date_till);
             }
-            $("#type").html(item.manufacturer + " - " + item.spz + ", " + item.type);
-            rows.push([startDate, endDate, item.period, "green", item.company.name.substring(0,20)]);
+            $("#type").html(value.manufacturer + " - " + value.spz + ", " + value.type);
+            rows.push([startDate, endDate, wrapLabelWithDataspan(item, value.period), "green", value.company.name.substring(0,20)]);
         } else {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));
-            rows.push([from,till, dateToString(from) + "-" + dateToString(till), "red", "Nepojištěno"]);
+            rows.push([from,till, wrapLabelWithDataspan(item, dateToString(from) + "-" + dateToString(till)), "red", "Nepojištěno"]);
         }
     });
 
@@ -131,8 +134,19 @@ function renderItems(element, items) {
         var row = getSelectedRow();
         if (row != undefined) {
             // Note: you can retrieve the contents of the selected row with
-            console.log(dataTable.getValue(row, 2));
+            var item = $(dataTable.getValue(row, 2));
+            var data = JSON.parse(item.attr("data-json"));
+            if(data.value != null) {
+                $("#insurance_tip").remove();
+                $( "body").append(_.template($("#modal_template").html(),{data:data}));
+                $('#insurance_tip').modal({});
+            } else {
+                $("#insurance_tip_notinsured").remove();
+                $( "body").append(_.template($("#modal_template_notinsured").html(),{data:data}));
+                $('#insurance_tip_notinsured').modal({});
+            }
         }
+        return false;
     };
 
     google.visualization.events.addListener(timeline, 'select', onselect);
