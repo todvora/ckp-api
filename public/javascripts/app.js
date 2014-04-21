@@ -76,6 +76,7 @@ function renderItems(element, items) {
     dataTable.addColumn({ type: 'datetime', id: 'end' });
     dataTable.addColumn({ type: 'string', id: 'content' });
     dataTable.addColumn({ type: 'string', id: 'className' });
+    dataTable.addColumn({ type: 'string', id: 'group' });
 
     var rows = [];
     _.each(items, function (item) {
@@ -87,11 +88,11 @@ function renderItems(element, items) {
                 endDate = new Date(item.date_till);
             }
             $("#type").html(item.manufacturer + " - " + item.spz + ", " + item.type);
-            rows.push([startDate, endDate, item.company.name + "<br>" + item.period, "green"]);
+            rows.push([startDate, endDate, item.period, "green", item.company.name.substring(0,20)]);
         } else {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));
-            rows.push([from,till, "Nepojištěno!" + "<br>" + dateToString(from) + "-" + dateToString(till), "red"]);
+            rows.push([from,till, dateToString(from) + "-" + dateToString(till), "red", "Nepojištěno"]);
         }
     });
 
@@ -100,12 +101,13 @@ function renderItems(element, items) {
     // specify options
     var options = {
         "editable": false,
-        "zoomMin": 1000 * 60 * 60 * 24,             // one day in milliseconds
-
+        "stackEvents": false,
         "min": new Date(2009, 0, 1),                // lower limit of visible range
         "max": new Date(),
         "width":  "100%",
-        "height": "99%",
+        "height": "auto",
+        "zoomable": false,
+        "groupsWidth": "200px",
         "style": "box" // optional
     };
 
@@ -149,6 +151,9 @@ CompaniesView = Backbone.View.extend({
         var counter = 0;
         _.each(this.models, function (item) {
             counter++;
+            if(typeof item.get("web") == "undefined") {
+                item.set("web", "")
+            }
             result = result + "<div class='col-md-4'>"
                 + "<h4>" + item.get("name") + "</h4>"
                 +"<span class='glyphicon glyphicon-phone-alt'></span>&nbsp;" + item.get("tel") + "<br>"
