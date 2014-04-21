@@ -5,3 +5,11 @@ body {
 a {
   color: #00B7FF;
 }
+div.timeline-event.red {
+  background-color: #FF9900;
+  border-color: #f5f5f5;
+}
+div.timeline-event.green {
+  background-color: #88FF47;
+  border-color: #f5f5f5;
+}

@@ -1,8 +1,4 @@
-var InsuranceItemModel = Backbone.Model.extend({
-    end: null,
-    start: null,
-    value: null
-});
+google.load("visualization", "1");
 
 var InsuranceCollectionModel = Backbone.Collection.extend({
     setRegistrationNumber: function (regno) {
@@ -16,6 +12,8 @@ var InsuranceCollectionModel = Backbone.Collection.extend({
         return "/api?&regno=" + this.regno + "&date=" + formatedDate;
     }
 });
+
+var InsuranceCompaniesCollectionModel = Backbone.Collection.extend({});
 
 _.extend(InsuranceCollectionModel, Backbone.Events);
 
@@ -51,12 +49,33 @@ function checkInsured(items) {
     $("#insuredDates").html(intervals);
 }
 
-function renderItems(chart, items) {
+function getInsuranceCompanies(items) {
+    var companies = [];
+    _.each(items, function (item) {
+        var value = item.get("value");
+        if (value != null) {
+
+            var contains = false;
+            _.each(companies, function (added) {
+                if (added.name == value.company.name) {
+                    contains = true;
+                }
+            });
+            if (!contains) {
+                companies.push(value.company);
+            }
+        }
+    });
+    return companies;
+}
+
+
+function renderItems(element, items) {
     var dataTable = new google.visualization.DataTable();
-    dataTable.addColumn({ type: 'string', id: 'Pojištění' });
-    dataTable.addColumn({ type: 'string', id: 'interval' });
-    dataTable.addColumn({ type: 'date', id: 'Začátek' });
-    dataTable.addColumn({ type: 'date', id: 'Konec' });
+    dataTable.addColumn({ type: 'datetime', id: 'start' });
+    dataTable.addColumn({ type: 'datetime', id: 'end' });
+    dataTable.addColumn({ type: 'string', id: 'content' });
+    dataTable.addColumn({ type: 'string', id: 'className' });
 
     var rows = [];
     _.each(items, function (item) {
@@ -68,17 +87,87 @@ function renderItems(chart, items) {
                 endDate = new Date(item.date_till);
             }
             $("#type").html(item.manufacturer + " - " + item.spz + ", " + item.type);
-            rows.push([item.company.name, item.period, startDate, endDate]);
+            rows.push([startDate, endDate, item.company.name + "<br>" + item.period, "green"]);
         } else {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));
-            rows.push(["NEPOJIŠTĚNO!",dateToString(from) + "-" + dateToString(till) , from,till]);
+            rows.push([from,till, "Nepojištěno!" + "<br>" + dateToString(from) + "-" + dateToString(till), "red"]);
         }
     });
 
     dataTable.addRows(rows);
-    chart.draw(dataTable);
+
+    // specify options
+    var options = {
+        "editable": false,
+        "zoomMin": 1000 * 60 * 60 * 24,             // one day in milliseconds
+
+        "min": new Date(2009, 0, 1),                // lower limit of visible range
+        "max": new Date(),
+        "width":  "100%",
+        "height": "99%",
+        "style": "box" // optional
+    };
+
+    // Instantiate our timeline object.
+    var timeline = new links.Timeline(element);
+
+    function getSelectedRow() {
+        var row = undefined;
+        var sel = timeline.getSelection();
+        if (sel.length) {
+            if (sel[0].row != undefined) {
+                row = sel[0].row;
+            }
+        }
+        return row;
+    }
+
+    var onselect = function (event) {
+        var row = getSelectedRow();
+        if (row != undefined) {
+            // Note: you can retrieve the contents of the selected row with
+            console.log(dataTable.getValue(row, 2));
+        }
+    };
+
+    google.visualization.events.addListener(timeline, 'select', onselect);
+
+    // Draw our timeline with the created data and options
+    timeline.draw(dataTable, options);
 }
+
+
+CompaniesView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+    render: function (event) {
+        var self = this;
+
+        var result = "";
+        var counter = 0;
+        _.each(this.models, function (item) {
+            counter++;
+            result = result + "<div class='col-md-4'>"
+                + "<h4>" + item.get("name") + "</h4>"
+                +"<span class='glyphicon glyphicon-phone-alt'></span>&nbsp;" + item.get("tel") + "<br>"
+                +"<span class='glyphicon glyphicon-envelope'></span>&nbsp;" + "<a href='mailto:"+item.get("email")+"'>" + item.get("email") + "</a><br>"
+                +"<span class='glyphicon glyphicon-home'></span>&nbsp;" + "<a href='"+item.get("web")+"'>" + item.get("web").replace("http://","") + "</a>"
+            +"</div>"
+            if(counter % 3 == 0) {
+                result = result + "</div><div class='row'>";
+            }
+        });
+        result = "<div class='row'>"+result+"</div>";
+        $("#companies").html(result);
+        $("#companies-contacts").show();
+        return this;
+    }
+});
+
+var companiesCollection = new InsuranceCompaniesCollectionModel();
+new CompaniesView({model:companiesCollection});
 
 CollectionView = Backbone.View.extend({
     initialize: function () {
@@ -87,16 +176,20 @@ CollectionView = Backbone.View.extend({
     render: function (event) {
         var self = this;
         var container = document.getElementById('chart');
-        var chart = new google.visualization.Timeline(container);
-        renderItems(chart, this.models);
+        renderItems(container, this.models);
         checkNotInsured(this.models);
         checkInsured(this.models);
+        companiesCollection.reset(getInsuranceCompanies(this.models));
         return this;
     }
 });
 
 var collection = new InsuranceCollectionModel();
 new CollectionView({model: collection});
+
+
+
+
 
 $('#submit').click(function () {
 
