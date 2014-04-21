@@ -26,7 +26,8 @@ function dateToString(date) {
 
 function checkNotInsured(items) {
     var intervals = "";
-    _.each(items, function (item) {
+    var orderedItems = items.slice().reverse();
+    _.each(orderedItems, function (item) {
         if(item.get("value") === null) {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));
@@ -39,10 +40,11 @@ function checkNotInsured(items) {
 
 function checkInsured(items) {
     var intervals = "";
-    _.each(items, function (item) {
+    var orderedItems = items.slice().reverse();
+    _.each(orderedItems, function (item) {
         var value = item.get("value");
         if(value != null) {
-            intervals = intervals + "<li>" + value.period + " "+ value.company.name + "</li>";
+            intervals = intervals + "<li>" + value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name + "</li>";
         }
     });
     $("#insured").show();
@@ -194,11 +196,20 @@ new CollectionView({model: collection});
 
 
 
+$('#regno').keypress(function (e) {
+    if (e.which == 13) {
+        processForm();
+        return false;
+    }
+});
 
 
 $('#submit').click(function () {
+    processForm();
+});
 
-    var button = $(this);
+function processForm() {
+    var button = $("#submit");
     button.button('loading');
 
     var regno = $("#regno").val();
@@ -209,4 +220,4 @@ $('#submit').click(function () {
         },
         reset: true
     });
-});
+}
