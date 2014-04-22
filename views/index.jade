@@ -1,48 +1,16 @@
 extends layout
 
 block content
-
-  h1 Informace o povinném ručení vozu
   div.row
     div.col-lg-12
+      h1 Informace o povinném ručení vozu
       div.input-group
         input.form-control(type="text", class="form-control", id="regno", placeholder="SPZ/RZ vašeho vozu")
         span.input-group-btn
           button(type="submit", class="btn btn-primary", id="submit", data-loading-text="<span class='glyphicon glyphicon-download'></span> Načítám informace...") Zjistit historii pojištění
-  br
-  br
-  h3(id="type") &nbsp;
-  div(id="chart" style="height:300px;")
+  div#content.row
+    div.col-lg-12
+      h3(id="type") &nbsp;
+      div(id="chart" style="height:300px;")
 
-  .panel.panel-default(id="insured" style="display:none")
-    .panel-heading
-      h3.panel-title
-        span(class="glyphicon glyphicon-ok")
-        | &nbsp; Pojištěná období
-    .panel-body
-      p V těchto obdobích bylo vozidlo pojištěno:
-        ul(id="insuredDates")
-
-  .panel.panel-default(id="notinsured" style="display:none")
-    .panel-heading
-      h3.panel-title
-        span(class="glyphicon glyphicon-exclamation-sign")
-        | &nbsp; Nepojištěná období
-    .panel-body
-      p Bylo nalezeno období, kdy vozidlo nemělo uzavřeno povinné ručení. To může mít několik příčin:
-      ul
-        li  V danou dobu nemuselo být evidováno pod touto registrační značkou (před koupí, po prodeji a pod.).
-        li  Vozidlo mělo značky uloženy na úřadě v depozitu a nebylo provozováno.
-        li  Opravdu neexistovalo žádné pojištění a s velkou pravděpodobností se dříve či později ozve ČKP a bude vymáhat peníze.
-
-      p
-      strong Období, pro která nebylo nalezeno pojištění:
-        ul(id="notInsuredDates")
-  .panel.panel-default(id="companies-contacts" style="display:none")
-    .panel-heading
-      h3.panel-title
-        span(class="glyphicon glyphicon glyphicon-phone-alt")
-        | &nbsp; Kontakty na vaše pojišťovny
-    .panel-body
-      div(id="companies")
   include includes/app_templates

@@ -25,30 +25,29 @@ function dateToString(date) {
 }
 
 function checkNotInsured(items) {
-    var intervals = "";
     var orderedItems = items.slice().reverse();
+    var result = [];
     _.each(orderedItems, function (item) {
         if(item.get("value") === null) {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));
-            intervals = intervals + "<li>" + dateToString(from) + " - " + dateToString(till) + "</li>";
+            result.push(dateToString(from) + " - " + dateToString(till));
         }
     });
-    $("#notinsured").show();
-    $("#notInsuredDates").html(intervals);
+    $("#content").append(_.template($("#panel_template_notinsured").html(),{'intervals':result}));
 }
 
 function checkInsured(items) {
     var intervals = "";
     var orderedItems = items.slice().reverse();
+    var result = [];
     _.each(orderedItems, function (item) {
         var value = item.get("value");
         if(value != null) {
-            intervals = intervals + "<li>" + value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name + "</li>";
+            result.push(value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name);
         }
     });
-    $("#insured").show();
-    $("#insuredDates").html(intervals);
+    $("#content").append(_.template($("#panel_template_insured").html(),{'intervals':result}));
 }
 
 function getInsuranceCompanies(items) {
@@ -162,27 +161,7 @@ CompaniesView = Backbone.View.extend({
     },
     render: function (event) {
         var self = this;
-
-        var result = "";
-        var counter = 0;
-        _.each(this.models, function (item) {
-            counter++;
-            if(typeof item.get("web") == "undefined") {
-                item.set("web", "")
-            }
-            result = result + "<div class='col-md-4'>"
-                + "<h4>" + item.get("name") + "</h4>"
-                +"<span class='glyphicon glyphicon-phone-alt'></span>&nbsp;" + item.get("tel") + "<br>"
-                +"<span class='glyphicon glyphicon-envelope'></span>&nbsp;" + "<a href='mailto:"+item.get("email")+"'>" + item.get("email") + "</a><br>"
-                +"<span class='glyphicon glyphicon-home'></span>&nbsp;" + "<a href='"+item.get("web")+"'>" + item.get("web").replace("http://","") + "</a>"
-            +"</div>"
-            if(counter % 3 == 0) {
-                result = result + "</div><div class='row'>";
-            }
-        });
-        result = "<div class='row'>"+result+"</div>";
-        $("#companies").html(result);
-        $("#companies-contacts").show();
+        $("#content").append(_.template($("#panel_template_companies").html(),{'companies':this.models}));
         return this;
     }
 });
