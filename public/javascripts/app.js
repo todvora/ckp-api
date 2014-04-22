@@ -72,7 +72,7 @@ function getInsuranceCompanies(items) {
 }
 
 function wrapLabelWithDataspan(item, label) {
-    return "<div data-json='"+JSON.stringify(item.toJSON())+"'>" +label+ "</div>";
+    return "<div title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
 }
 
 function renderItems(element, items) {

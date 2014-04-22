@@ -45,28 +45,4 @@ block content
         | &nbsp; Kontakty na vaše pojišťovny
     .panel-body
       div(id="companies")
-
-  script#modal_template(style='display: none')
-    .modal.fade(id="insurance_tip")
-      .modal-dialog
-          .modal-content
-            .modal-header
-              button.close(type='button', data-dismiss='modal', aria-hidden='true')
-              h4.modal-title<%- data.value.manufacturer %> <%- data.value.spz %>
-            .modal-body
-              p Vozidlo bylo v období <%- data.value.period %> v pořádku pojištěno u <%- data.value.company.name %>
-            .modal-footer
-              button.btn.btn-default(type='button', data-dismiss='modal') Zavřít
-
-  script#modal_template_notinsured(style='display: none')
-    .modal.fade(id="insurance_tip_notinsured")
-      .modal-dialog
-          .modal-content
-            .modal-header
-              button.close(type='button', data-dismiss='modal', aria-hidden='true')
-              h4.modal-title Nepojištěno
-            .modal-body
-              p V období od <%- new Date(data.start).getDate() %>.<%- new Date(data.start).getMonth() + 1 %>.<%- new Date(data.start).getFullYear() %> do <%- new Date(data.end).getDate() %>.<%- new Date(data.end).getMonth() + 1 %>.<%- new Date(data.end).getFullYear() %> nebylo vozidlo evidováno u žádné pojišťovny.
-            .modal-footer
-              button.btn.btn-default(type='button', data-dismiss='modal') Zavřít
-
+  include includes/app_templates
