@@ -82,14 +82,21 @@ function renderItems(element, items) {
     dataTable.addColumn({ type: 'string', id: 'className' });
     dataTable.addColumn({ type: 'string', id: 'group' });
 
+    function parseCkpDate(dateStr) {
+        // date format is "YYYY-M-D"
+        var parts = dateStr.split("-");
+        var date = new Date(parts[0], (parts[1] - 1), parts[2]);
+        return  date;
+    };
+
     var rows = [];
     _.each(items, function (item) {
         if (item.get("value") != null) {
             var value = item.get("value");
-            var startDate = new Date(value.date_from);
+            var startDate = parseCkpDate(value.date_from);
             var endDate = new Date();
             if (value.date_till != null) {
-                endDate = new Date(value.date_till);
+                endDate = parseCkpDate(value.date_till);
             }
             $("#type").html(value.manufacturer + " - " + value.spz + ", " + value.type);
             rows.push([startDate, endDate, wrapLabelWithDataspan(item, value.period), "green", value.company.name.substring(0,20)]);
