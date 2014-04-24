@@ -43,54 +43,60 @@ script#modal_template_notinsured(style='display: none')
             button.btn.btn-default(type='button', data-dismiss='modal') Zavřít
 
 script#panel_template_notinsured(style='display: none')
-  .panel.panel-default
-    .panel-heading
-      h3.panel-title
-        span(class="glyphicon glyphicon-exclamation-sign")
-        | &nbsp; Nepojištěná období
-    .panel-body
-      p Bylo nalezeno období, kdy vozidlo nemělo uzavřeno povinné ručení. To může mít několik příčin:
-      ul
-        li  V danou dobu nemuselo být evidováno pod touto registrační značkou (před koupí, po prodeji a pod.).
-        li  Vozidlo mělo značky uloženy na úřadě v depozitu a nebylo provozováno.
-        li  Opravdu neexistovalo žádné pojištění a s velkou pravděpodobností se dříve či později ozve ČKP a bude vymáhat peníze.
-      p
-      strong Období, pro která nebylo nalezeno pojištění:
-        ul(id="notInsuredDates")
-          != "<% _.each(intervals, function(interval) { %>"
-          li <%= interval %>
-          != "<% }); %>"
+  div.row
+    div.col-lg-12
+      .panel.panel-default
+        .panel-heading
+          h3.panel-title
+            span(class="glyphicon glyphicon-exclamation-sign")
+            | &nbsp; Nepojištěná období
+        .panel-body
+          p Bylo nalezeno období, kdy vozidlo nemělo uzavřeno povinné ručení. To může mít několik příčin:
+          ul
+            li  V danou dobu nemuselo být evidováno pod touto registrační značkou (před koupí, po prodeji a pod.).
+            li  Vozidlo mělo značky uloženy na úřadě v depozitu a nebylo provozováno.
+            li  Opravdu neexistovalo žádné pojištění a s velkou pravděpodobností se dříve či později ozve ČKP a bude vymáhat peníze.
+          p
+          strong Období, pro která nebylo nalezeno pojištění:
+            ul(id="notInsuredDates")
+              != "<% _.each(intervals, function(interval) { %>"
+              li <%= interval %>
+              != "<% }); %>"
 
 script#panel_template_insured(style='display: none')
-  .panel.panel-default(id="insured")
-    .panel-heading
-      h3.panel-title
-        span(class="glyphicon glyphicon-ok")
-        | &nbsp; Pojištěná období
-    .panel-body
-      p V těchto obdobích bylo vozidlo pojištěno:
-        ul
-        != "<% _.each(intervals, function(interval) { %>"
-          li <%= interval %>
-        != "<% }); %>"
+  div.row
+    div.col-lg-12
+      .panel.panel-default(id="insured")
+        .panel-heading
+          h3.panel-title
+            span(class="glyphicon glyphicon-ok")
+            | &nbsp; Pojištěná období
+        .panel-body
+          p V těchto obdobích bylo vozidlo pojištěno:
+            ul
+            != "<% _.each(intervals, function(interval) { %>"
+              li <%= interval %>
+            != "<% }); %>"
 
 script#panel_template_companies(style='display: none')
-  .panel.panel-default(id="companies-contacts")
-    .panel-heading
-      h3.panel-title
-        span(class="glyphicon glyphicon glyphicon-phone-alt")
-        | &nbsp; Kontakty na vaše pojišťovny
-    .panel-body
-      != "<% _.each(companies, function(item) { %>"
-        div.col-md-4
-          h4 <%= item.get("name") %>
-          span.glyphicon.glyphicon-phone-alt <%= item.get("tel") %>
-          br
-          span.glyphicon.glyphicon-envelope
-          | &nbsp;
-          a(href!="mailto:<%= item.get('email') %>") <%= item.get("email") %>
-          br
-          span.glyphicon.glyphicon-home
-          | &nbsp;
-          a(href!="<%= item.get('web') %>") <%= item.get("web") %>
-      != "<% }); %>"
+  div.row
+    div.col-lg-12
+      .panel.panel-default(id="companies-contacts")
+        .panel-heading
+          h3.panel-title
+            span(class="glyphicon glyphicon glyphicon-phone-alt")
+            | &nbsp; Kontakty na vaše pojišťovny
+        .panel-body
+          != "<% _.each(companies, function(item) { %>"
+            div.col-md-4
+              h4 <%= item.get("name") %>
+              span.glyphicon.glyphicon-phone-alt <%= item.get("tel") %>
+              br
+              span.glyphicon.glyphicon-envelope
+              | &nbsp;
+              a(href!="mailto:<%= item.get('email') %>") <%= item.get("email") %>
+              br
+              span.glyphicon.glyphicon-home
+              | &nbsp;
+              a(href!="<%= item.get('web') %>") <%= item.get("web") %>
+          != "<% }); %>"

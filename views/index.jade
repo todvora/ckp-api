@@ -8,9 +8,10 @@ block content
         input.form-control(type="text", class="form-control", id="regno", placeholder="SPZ/RZ vašeho vozu")
         span.input-group-btn
           button(type="submit", class="btn btn-primary", id="submit", data-loading-text="<span class='glyphicon glyphicon-download'></span> Načítám informace...") Zjistit historii pojištění
-  div#content.row
-    div.col-lg-12
-      h3(id="type") &nbsp;
-      div(id="chart" style="height:300px;")
+  div#content
+    div.row
+      div.col-lg-12
+        h3(id="type") &nbsp;
+        div(id="chart" style="height:300px;")
 
   include includes/app_templates
