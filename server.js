@@ -3,8 +3,10 @@
  * Module dependencies.
  */
 
+// set timezone for node. It must be used before any date manipulations
+process.env.TZ = 'Europe/Prague';
+
 var express = require('express');
-var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var appconfig = require('./appconfig');
