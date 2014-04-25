@@ -182,6 +182,7 @@ CollectionView = Backbone.View.extend({
     },
     render: function (event) {
         var self = this;
+        $("#content").append(_.template($("#panel_timeline").html(),{}));
         var container = document.getElementById('chart');
         renderItems(container, this.models);
         checkNotInsured(this.models);
@@ -211,6 +212,8 @@ $('#submit').click(function () {
 function processForm() {
     var button = $("#submit");
     button.button('loading');
+
+    $("#content").html("");
 
     var regno = $("#regno").val();
     collection.setRegistrationNumber(regno);

@@ -100,3 +100,9 @@ script#panel_template_companies(style='display: none')
               | &nbsp;
               a(href!="<%= item.get('web') %>") <%= item.get("web") %>
           != "<% }); %>"
+
+script#panel_timeline(style='display: none')
+    div.row
+      div.col-lg-12
+        h3(id="type") &nbsp;
+        div(id="chart" style="height:300px;")
