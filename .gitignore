@@ -1,2 +1,10 @@
 # used less, ingored css version
 public/stylesheets/style.css
+
+# intellij idea config files
+.idea/
+*.iml
+
+# node.js modules
+node_modules/
+
