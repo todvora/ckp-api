@@ -5,18 +5,10 @@ var InsuranceCollectionModel = Backbone.Collection.extend({
         this.regno = regno;
         return this;
     },
-
     url: function () {
         var currentDate = new Date();
         var formatedDate = currentDate.getDate() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getFullYear();
         return "/api?&regno=" + this.regno + "&date=" + formatedDate;
-    }
-});
-
-var InsuranceCompaniesCollectionModel = Backbone.Collection.extend({
-    setRegistrationNumber: function (regno) {
-        this.regno = regno;
-        return this;
     }
 });
 
@@ -29,38 +21,6 @@ function dateToString(date) {
     return "neuvedeno";
 }
 
-function checkNotInsured(items) {
-    var orderedItems = items.slice().reverse();
-    var result = [];
-    _.each(orderedItems, function (item) {
-        if(item.get("value") === null) {
-            var from = new Date(item.get("start"));
-            var till = new Date(item.get("end"));
-            result.push(dateToString(from) + " - " + dateToString(till));
-        }
-    });
-    $("#content").append(_.template($("#panel_template_notinsured").html(),{'intervals':result}));
-}
-
-function checkInsured(items) {
-    var intervals = "";
-    var orderedItems = items.slice().reverse();
-    var result = [];
-    _.each(orderedItems, function (item) {
-        var value = item.get("value");
-        if(value != null) {
-            result.push(wrapLabelWithDataspan(item, value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name));
-        }
-    });
-
-    $("#content").append(_.template($("#panel_template_insured").html(),{'intervals':result}));
-    $("#insured ul li div").click(function(event) {
-        event.preventDefault();
-        console.log(this);
-        renderInsurancePopup($(this));
-        return false;
-    });
-}
 
 function getInsuranceCompanies(items) {
     var companies = [];
@@ -98,100 +58,73 @@ function renderInsurancePopup(item) {
         $('#insurance_tip_notinsured').modal({});
     }
 }
-function renderItems(element, items) {
-    var dataTable = new google.visualization.DataTable();
-    dataTable.addColumn({ type: 'datetime', id: 'start' });
-    dataTable.addColumn({ type: 'datetime', id: 'end' });
-    dataTable.addColumn({ type: 'string', id: 'content' });
-    dataTable.addColumn({ type: 'string', id: 'className' });
-    dataTable.addColumn({ type: 'string', id: 'group' });
 
-    function parseCkpDate(dateStr) {
-        // date format is "YYYY-M-D"
-        var parts = dateStr.split("-");
-        var date = new Date(parts[0], (parts[1] - 1), parts[2]);
-        return  date;
-    };
-
-    var rows = [];
-    _.each(items, function (item) {
-        if (item.get("value") != null) {
+NotInsuredListView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+    render: function (event) {
+        var intervals = "";
+        var orderedItems = this.models.slice().reverse();
+        var result = [];
+        _.each(orderedItems, function (item) {
             var value = item.get("value");
-            var startDate = parseCkpDate(value.date_from);
-            var endDate = new Date();
-            if (value.date_till != null) {
-                endDate = parseCkpDate(value.date_till);
+            if(value != null) {
+                result.push(wrapLabelWithDataspan(item, value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name));
             }
-            $("#type").html(value.manufacturer + " - " + value.spz + ", " + value.type);
-            rows.push([startDate, endDate, wrapLabelWithDataspan(item, value.period), "green", value.company.name.substring(0,20)]);
-        } else {
-            var from = new Date(item.get("start"));
-            var till = new Date(item.get("end"));
-            rows.push([from,till, wrapLabelWithDataspan(item, dateToString(from) + "-" + dateToString(till)), "red", "Nepojištěno"]);
-        }
-    });
+        });
 
-    dataTable.addRows(rows);
-
-    // specify options
-    var options = {
-        "editable": false,
-        "stackEvents": false,
-        "min": new Date(2009, 0, 1),                // lower limit of visible range
-        "max": new Date(),
-        "width":  "100%",
-        "height": "auto",
-        "zoomable": false,
-        "groupsWidth": "200px",
-        "style": "box" // optional
-    };
-
-    // Instantiate our timeline object.
-    var timeline = new links.Timeline(element);
-
-    function getSelectedRow() {
-        var row = undefined;
-        var sel = timeline.getSelection();
-        if (sel.length) {
-            if (sel[0].row != undefined) {
-                row = sel[0].row;
-            }
-        }
-        return row;
+        $("#content").append(_.template($("#panel_template_insured").html(),{'intervals':result}));
+        $("#insured ul li div").click(function(event) {
+            event.preventDefault();
+            renderInsurancePopup($(this));
+            return false;
+        });
     }
+});
 
-    var onselect = function (event) {
-        var row = getSelectedRow();
-        if (row != undefined) {
-            // Note: you can retrieve the contents of the selected row with
-            var item = $(dataTable.getValue(row, 2));
-            renderInsurancePopup(item);
-        }
-        return false;
-    };
-
-    google.visualization.events.addListener(timeline, 'select', onselect);
-
-    // Draw our timeline with the created data and options
-    timeline.draw(dataTable, options);
-}
-
+InsuredListView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+    render: function (event) {
+        var orderedItems = this.models.slice().reverse();
+        var result = [];
+        _.each(orderedItems, function (item) {
+            if(item.get("value") === null) {
+                var from = new Date(item.get("start"));
+                var till = new Date(item.get("end"));
+                result.push(dateToString(from) + " - " + dateToString(till));
+            }
+        });
+        $("#content").append(_.template($("#panel_template_notinsured").html(),{'intervals':result}));
+    }
+});
 
 CompaniesView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
     render: function (event) {
-        var self = this;
-        $("#content").append(_.template($("#panel_template_companies").html(),{'companies':this.models, 'regno':this.registratio}));
+        var values = getInsuranceCompanies(this.models);
+        $("#content").append(_.template($("#panel_template_companies").html(),{'companies':values, 'regno':this.registratio}));
         return this;
     }
 });
 
-var companiesCollection = new InsuranceCompaniesCollectionModel();
-new CompaniesView({model:companiesCollection});
+CarInfoView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+    render: function (event) {
+        var value = _.find(this.models, function(elem){ return elem.get("value") != null });
+        value = value.get("value");
+        $("#content").append(_.template($("#panel_typeinfo").html(),{'vehicle':value}));
+        return this;
+    }
+});
 
-CollectionView = Backbone.View.extend({
+TimelineView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -199,19 +132,18 @@ CollectionView = Backbone.View.extend({
         var self = this;
         $("#content").append(_.template($("#panel_timeline").html(),{}));
         var container = document.getElementById('chart');
-        renderItems(container, this.models);
-        checkNotInsured(this.models);
-        checkInsured(this.models);
-        companiesCollection.setRegistrationNumber($("#regno").val());
-        companiesCollection.reset(getInsuranceCompanies(this.models));
+        new InsuranceTimeline(container, this.models, renderInsurancePopup);
         return this;
     }
 });
 
 var collection = new InsuranceCollectionModel();
-new CollectionView({model: collection});
 
-
+new CarInfoView({model:collection});
+new TimelineView({model: collection});
+new InsuredListView({model:collection});
+new NotInsuredListView({model:collection});
+new CompaniesView({model:collection});
 
 $('#regno').keypress(function (e) {
     if (e.which == 13) {
@@ -220,16 +152,15 @@ $('#regno').keypress(function (e) {
     }
 });
 
-
 $('#submit').click(function () {
     processForm();
 });
 
 function processForm() {
-
-    var regno = $("#regno").val();
+    var inputField = $("#regno");
+    var regno = inputField.val();
     regno = regno.toUpperCase().trim();
-    $("#regno").val(regno);
+    inputField.val(regno);
 
     var button = $("#submit");
     button.button('loading');

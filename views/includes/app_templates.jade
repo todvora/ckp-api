@@ -1,4 +1,5 @@
 script#modal_template(style='display: none')
+  //<![CDATA[
   .modal.fade(id="insurance_tip")
     .modal-dialog
         .modal-content
@@ -29,8 +30,10 @@ script#modal_template(style='display: none')
                   a(href!="<%- data.value.url %>", target="_blank") <%- data.value.url %>
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal') Zavřít
+  //]]>
 
 script#modal_template_notinsured(style='display: none')
+  //<![CDATA[
   .modal.fade(id="insurance_tip_notinsured")
     .modal-dialog
         .modal-content
@@ -41,8 +44,10 @@ script#modal_template_notinsured(style='display: none')
             p V období od <%- new Date(data.start).getDate() %>.<%- new Date(data.start).getMonth() + 1 %>.<%- new Date(data.start).getFullYear() %> do <%- new Date(data.end).getDate() %>.<%- new Date(data.end).getMonth() + 1 %>.<%- new Date(data.end).getFullYear() %> nebylo vozidlo evidováno u žádné pojišťovny.
           .modal-footer
             button.btn.btn-default(type='button', data-dismiss='modal') Zavřít
+  //]]>
 
 script#panel_template_notinsured(style='display: none')
+  //<![CDATA[
   div.row
     div.col-lg-12
       .panel.panel-default
@@ -62,8 +67,10 @@ script#panel_template_notinsured(style='display: none')
               != "<% _.each(intervals, function(interval) { %>"
               li <%= interval %>
               != "<% }); %>"
+  //]]>
 
 script#panel_template_insured(style='display: none')
+  //<![CDATA[
   div.row
     div.col-lg-12
       .panel.panel-default(id="insured")
@@ -78,8 +85,9 @@ script#panel_template_insured(style='display: none')
                   li
                     a(href="#") <%= interval %>
                 != "<% }); %>"
-
+  //]]>
 script#panel_template_companies(style='display: none')
+  //<![CDATA[
   div.row
     div.col-lg-12
       .panel.panel-default(id="companies-contacts")
@@ -90,21 +98,28 @@ script#panel_template_companies(style='display: none')
         .panel-body
           != "<% _.each(companies, function(item) { %>"
             div.col-md-4
-              h4 <%= item.get("name") %>
+              h4 <%= item.name %>
               span.glyphicon.glyphicon-phone-alt
-              &nbsp;<%= item.get("tel") %>
+              &nbsp;+420 <%= item.tel %>
               br
               span.glyphicon.glyphicon-envelope
               | &nbsp;
-              a(href!="mailto:<%= item.get('email') %>?subject=Dotaz%20k%20pojištění%20vozidla%20<%= regno %>") <%= item.get("email") %>
+              a(href!="mailto:<%= item.email %>?subject=Dotaz%20k%20pojištění%20vozidla%20<%= regno %>") <%= item.email %>
               br
               span.glyphicon.glyphicon-home
               | &nbsp;
-              a(href!="<%= item.get('web') %>") <%= item.get("web") %>
+              a(href!="<%= item.web %>") <%= item.web %>
           != "<% }); %>"
-
-script#panel_timeline(style='display: none')
+  //]]>
+script#panel_typeinfo(style='display: none')
+    //<![CDATA[
     div.row
       div.col-lg-12
-        h3(id="type") &nbsp;
+        h3(id="type") <%= vehicle.manufacturer %> - <%= vehicle.spz %>, <%= vehicle.type %>
+    //]]>
+script#panel_timeline(style='display: none')
+    //<![CDATA[
+    div.row
+      div.col-lg-12
         div(id="chart" style="height:300px;")
+    //]]>
