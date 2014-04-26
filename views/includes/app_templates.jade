@@ -90,11 +90,12 @@ script#panel_template_companies(style='display: none')
           != "<% _.each(companies, function(item) { %>"
             div.col-md-4
               h4 <%= item.get("name") %>
-              span.glyphicon.glyphicon-phone-alt <%= item.get("tel") %>
+              span.glyphicon.glyphicon-phone-alt
+              &nbsp;<%= item.get("tel") %>
               br
               span.glyphicon.glyphicon-envelope
               | &nbsp;
-              a(href!="mailto:<%= item.get('email') %>") <%= item.get("email") %>
+              a(href!="mailto:<%= item.get('email') %>?subject=Dotaz%20k%20pojištění%20vozidla%20<%= regno %>") <%= item.get("email") %>
               br
               span.glyphicon.glyphicon-home
               | &nbsp;

@@ -13,7 +13,12 @@ var InsuranceCollectionModel = Backbone.Collection.extend({
     }
 });
 
-var InsuranceCompaniesCollectionModel = Backbone.Collection.extend({});
+var InsuranceCompaniesCollectionModel = Backbone.Collection.extend({
+    setRegistrationNumber: function (regno) {
+        this.regno = regno;
+        return this;
+    }
+});
 
 _.extend(InsuranceCollectionModel, Backbone.Events);
 
@@ -168,7 +173,7 @@ CompaniesView = Backbone.View.extend({
     },
     render: function (event) {
         var self = this;
-        $("#content").append(_.template($("#panel_template_companies").html(),{'companies':this.models}));
+        $("#content").append(_.template($("#panel_template_companies").html(),{'companies':this.models, 'regno':this.registratio}));
         return this;
     }
 });
@@ -187,6 +192,7 @@ CollectionView = Backbone.View.extend({
         renderItems(container, this.models);
         checkNotInsured(this.models);
         checkInsured(this.models);
+        companiesCollection.setRegistrationNumber($("#regno").val());
         companiesCollection.reset(getInsuranceCompanies(this.models));
         return this;
     }
@@ -210,12 +216,16 @@ $('#submit').click(function () {
 });
 
 function processForm() {
+
+    var regno = $("#regno").val();
+    regno = regno.toUpperCase().trim();
+    $("#regno").val(regno);
+
     var button = $("#submit");
     button.button('loading');
 
     $("#content").html("");
 
-    var regno = $("#regno").val();
     collection.setRegistrationNumber(regno);
     collection.fetch({
         success: function (model, response, options) {
