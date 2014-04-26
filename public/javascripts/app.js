@@ -49,10 +49,17 @@ function checkInsured(items) {
     _.each(orderedItems, function (item) {
         var value = item.get("value");
         if(value != null) {
-            result.push(value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name);
+            result.push(wrapLabelWithDataspan(item, value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name));
         }
     });
+
     $("#content").append(_.template($("#panel_template_insured").html(),{'intervals':result}));
+    $("#insured ul li div").click(function(event) {
+        event.preventDefault();
+        console.log(this);
+        renderInsurancePopup($(this));
+        return false;
+    });
 }
 
 function getInsuranceCompanies(items) {
@@ -79,6 +86,18 @@ function wrapLabelWithDataspan(item, label) {
     return "<div title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
 }
 
+function renderInsurancePopup(item) {
+    var data = JSON.parse(item.attr("data-json"));
+    if (data.value != null) {
+        $("#insurance_tip").remove();
+        $("body").append(_.template($("#modal_template").html(), {data: data}));
+        $('#insurance_tip').modal({});
+    } else {
+        $("#insurance_tip_notinsured").remove();
+        $("body").append(_.template($("#modal_template_notinsured").html(), {data: data}));
+        $('#insurance_tip_notinsured').modal({});
+    }
+}
 function renderItems(element, items) {
     var dataTable = new google.visualization.DataTable();
     dataTable.addColumn({ type: 'datetime', id: 'start' });
@@ -146,16 +165,7 @@ function renderItems(element, items) {
         if (row != undefined) {
             // Note: you can retrieve the contents of the selected row with
             var item = $(dataTable.getValue(row, 2));
-            var data = JSON.parse(item.attr("data-json"));
-            if(data.value != null) {
-                $("#insurance_tip").remove();
-                $( "body").append(_.template($("#modal_template").html(),{data:data}));
-                $('#insurance_tip').modal({});
-            } else {
-                $("#insurance_tip_notinsured").remove();
-                $( "body").append(_.template($("#modal_template_notinsured").html(),{data:data}));
-                $('#insurance_tip_notinsured').modal({});
-            }
+            renderInsurancePopup(item);
         }
         return false;
     };

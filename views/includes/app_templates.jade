@@ -74,9 +74,10 @@ script#panel_template_insured(style='display: none')
         .panel-body
           p V těchto obdobích bylo vozidlo pojištěno:
             ul
-            != "<% _.each(intervals, function(interval) { %>"
-              li <%= interval %>
-            != "<% }); %>"
+                != "<% _.each(intervals, function(interval) { %>"
+                  li
+                    a(href="#") <%= interval %>
+                != "<% }); %>"
 
 script#panel_template_companies(style='display: none')
   div.row
