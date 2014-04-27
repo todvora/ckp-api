@@ -1,5 +1,25 @@
 google.load("visualization", "1");
 
+// -- utils
+function wrapLabelWithData(item, label) {
+    return "<div title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
+}
+
+function renderInsurancePopup(item) {
+    var data = JSON.parse(item.attr("data-json"));
+    if (data.value != null) {
+        $("#insurance_tip").remove();
+        $("body").append(_.template($("#modal_template").html(), {data: data}));
+        $('#insurance_tip').modal({});
+    } else {
+        $("#insurance_tip_notinsured").remove();
+        $("body").append(_.template($("#modal_template_notinsured").html(), {data: data}));
+        $('#insurance_tip_notinsured').modal({});
+    }
+}
+
+
+// -- models and views
 var InsuranceCollectionModel = Backbone.Collection.extend({
     setRegistrationNumber: function (regno) {
         this.regno = regno;
@@ -14,6 +34,30 @@ var InsuranceCollectionModel = Backbone.Collection.extend({
 
 _.extend(InsuranceCollectionModel, Backbone.Events);
 
+NotInsuredListView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+    render: function (event) {
+        var intervals = "";
+        var orderedItems = this.models.slice().reverse();
+        var result = [];
+        _.each(orderedItems, function (item) {
+            var value = item.get("value");
+            if(value != null) {
+                result.push(wrapLabelWithData(item, value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name));
+            }
+        });
+
+        $("#content").append(_.template($("#panel_template_insured").html(),{'intervals':result}));
+        $("#insured ul li div").click(function(event) {
+            event.preventDefault();
+            renderInsurancePopup($(this));
+            return false;
+        });
+    }
+});
+
 function dateToString(date) {
     if(date != null) {
         return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
@@ -21,6 +65,23 @@ function dateToString(date) {
     return "neuvedeno";
 }
 
+InsuredListView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+    render: function (event) {
+        var orderedItems = this.models.slice().reverse();
+        var result = [];
+        _.each(orderedItems, function (item) {
+            if(item.get("value") === null) {
+                var from = new Date(item.get("start"));
+                var till = new Date(item.get("end"));
+                result.push(dateToString(from) + " - " + dateToString(till));
+            }
+        });
+        $("#content").append(_.template($("#panel_template_notinsured").html(),{'intervals':result}));
+    }
+});
 
 function getInsuranceCompanies(items) {
     var companies = [];
@@ -41,65 +102,6 @@ function getInsuranceCompanies(items) {
     });
     return companies;
 }
-
-function wrapLabelWithDataspan(item, label) {
-    return "<div title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
-}
-
-function renderInsurancePopup(item) {
-    var data = JSON.parse(item.attr("data-json"));
-    if (data.value != null) {
-        $("#insurance_tip").remove();
-        $("body").append(_.template($("#modal_template").html(), {data: data}));
-        $('#insurance_tip').modal({});
-    } else {
-        $("#insurance_tip_notinsured").remove();
-        $("body").append(_.template($("#modal_template_notinsured").html(), {data: data}));
-        $('#insurance_tip_notinsured').modal({});
-    }
-}
-
-NotInsuredListView = Backbone.View.extend({
-    initialize: function () {
-        this.model.on('reset', this.render);
-    },
-    render: function (event) {
-        var intervals = "";
-        var orderedItems = this.models.slice().reverse();
-        var result = [];
-        _.each(orderedItems, function (item) {
-            var value = item.get("value");
-            if(value != null) {
-                result.push(wrapLabelWithDataspan(item, value.period.replace("neuvedeno", "dosud") + ": "+ value.company.name));
-            }
-        });
-
-        $("#content").append(_.template($("#panel_template_insured").html(),{'intervals':result}));
-        $("#insured ul li div").click(function(event) {
-            event.preventDefault();
-            renderInsurancePopup($(this));
-            return false;
-        });
-    }
-});
-
-InsuredListView = Backbone.View.extend({
-    initialize: function () {
-        this.model.on('reset', this.render);
-    },
-    render: function (event) {
-        var orderedItems = this.models.slice().reverse();
-        var result = [];
-        _.each(orderedItems, function (item) {
-            if(item.get("value") === null) {
-                var from = new Date(item.get("start"));
-                var till = new Date(item.get("end"));
-                result.push(dateToString(from) + " - " + dateToString(till));
-            }
-        });
-        $("#content").append(_.template($("#panel_template_notinsured").html(),{'intervals':result}));
-    }
-});
 
 CompaniesView = Backbone.View.extend({
     initialize: function () {
@@ -161,6 +163,7 @@ function processForm() {
     var regno = inputField.val();
     regno = regno.toUpperCase().trim();
     inputField.val(regno);
+    $(location).attr('hash', regno);
 
     var button = $("#submit");
     button.button('loading');
@@ -175,3 +178,16 @@ function processForm() {
         reset: true
     });
 }
+
+function checkHashAndFireAction() {
+    var hash = $(location).attr('hash');
+    if(typeof hash != "undefined" && hash.length > 1) {
+        hash = encodeURIComponent(hash.substr(1));
+        $("#regno").val(hash);
+        processForm();
+    }
+}
+
+$( document ).ready(function() {
+    checkHashAndFireAction();
+});

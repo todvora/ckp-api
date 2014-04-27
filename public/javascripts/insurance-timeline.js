@@ -63,11 +63,11 @@ function InsuranceTimeline(el, models, clickCallback) {
                 endDate = parseCkpDate(value.date_till);
             }
 
-            rows.push([startDate, endDate, wrapLabelWithDataspan(item, value.period), "green", value.company.name.substring(0, 20)]);
+            rows.push([startDate, endDate, wrapLabelWithData(item, value.period), "green", value.company.name.substring(0, 20)]);
         } else {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));
-            rows.push([from, till, wrapLabelWithDataspan(item, dateToString(from) + "-" + dateToString(till)), "red", "Nepojištěno"]);
+            rows.push([from, till, wrapLabelWithData(item, dateToString(from) + "-" + dateToString(till)), "red", "Nepojištěno"]);
         }
     });
 
