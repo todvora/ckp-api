@@ -109,7 +109,7 @@ CompaniesView = Backbone.View.extend({
     },
     render: function (event) {
         var values = getInsuranceCompanies(this.models);
-        $("#content").append(_.template($("#panel_template_companies").html(),{'companies':values, 'regno':this.registratio}));
+        $("#content").append(_.template($("#panel_template_companies").html(),{'companies':values, 'regno':this.regno}));
         return this;
     }
 });
