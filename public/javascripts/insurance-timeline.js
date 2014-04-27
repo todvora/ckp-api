@@ -51,6 +51,10 @@ function InsuranceTimeline(el, models, clickCallback) {
         return false;
     }
 
+    function buildLabel(item, label) {
+        return "<div class='insurance-label' title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
+    }
+
     var dataTable = createDatatable();
 
     var rows = [];
@@ -63,11 +67,11 @@ function InsuranceTimeline(el, models, clickCallback) {
                 endDate = parseCkpDate(value.date_till);
             }
 
-            rows.push([startDate, endDate, wrapLabelWithData(item, value.period), "green", value.company.name.substring(0, 20)]);
+            rows.push([startDate, endDate, buildLabel(item, value.period), "green", value.company.name.substring(0, 20)]);
         } else {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));
-            rows.push([from, till, wrapLabelWithData(item, dateToString(from) + "-" + dateToString(till)), "red", "Nepojištěno"]);
+            rows.push([from, till, buildLabel(item, dateToString(from) + "-" + dateToString(till)), "red", "Nepojištěno"]);
         }
     });
 
@@ -80,5 +84,32 @@ function InsuranceTimeline(el, models, clickCallback) {
 
     // Draw our timeline with the created data and options
     timeline.draw(dataTable,  getTimelineOptions());
+
+    $(".insurance-label").parent().parent().hover(function () {
+        var desiredWidth = 200;
+        if ($(this).width() < desiredWidth) {
+            var origLeft = $(this).position().left;
+            var left = origLeft;
+            if ((origLeft + desiredWidth) > $(this).parent().width()) {
+                left = origLeft - (origLeft + desiredWidth - $(this).parent().width());
+            }
+            $(this).attr("data-orig-left", origLeft);
+            $(this).attr("data-orig-width", $(this).css("width"));
+            $(this).css('z-index', 100);
+            $(this).stop().animate({
+                width: desiredWidth,
+                left: left
+            });
+        }
+    }, function () {
+        if (typeof $(this).attr("data-orig-width") != "undefined") {
+            $(this).stop().animate({
+                width: $(this).attr("data-orig-width"),
+                left: $(this).attr("data-orig-left"),
+                'z-index': 1
+            });
+        }
+    });
+
     return timeline;
 }
