@@ -123,3 +123,25 @@ script#panel_timeline(style='display: none')
       div.col-lg-12
         div(id="chart" style="height:300px;")
     //]]>
+script#panel_anniversary(style='display: none')
+  //<![CDATA[
+  div.row
+    div.col-lg-12
+      .panel.panel-default(id="insured")
+        .panel-heading
+          h3.panel-title
+            span(class="glyphicon glyphicon-calendar")
+            | &nbsp; Výročí smlouvy a výpověď
+        .panel-body
+          p Vaše aktuální pojistná smlouva byla uzavřena dne  <%= contractFrom.getDate() %>.<%= contractFrom.getMonth() + 1 %>.<%= contractFrom.getFullYear() %>.
+            <% if (twoMonthsFromStart.getTime() > new Date().getTime()) { %>
+            p Pojištění bylo uzavřeno před méně, jak dvěma měsíci. Můžete tak případně vypovědět pojištění v zákonné lhůtě 2 měsíců od uzavření pojistky - nejpozději <%= twoMonthsFromStart.getDate() %>.<%= twoMonthsFromStart.getMonth() + 1 %>.<%= twoMonthsFromStart.getFullYear() %>.
+            p Další možnost výpovědi nastane až k výročí smlouvy. Výpověď je v tom případě nutné podat nejpozději 6 týdnů před jejím výročím (
+              a(href="http://business.center.cz/business/pravo/zakony/pojistna_smlouva/cast1h1.aspx") § 22 odst. 1 zák. č. 37/2004 Sb.
+              |), tedy nejpozději dne <%= anniversary.getDate() %>.<%= anniversary.getMonth() + 1 %>.<%= anniversary.getFullYear() %>.
+            <% } else { %>
+          p Pokud budete chtít změnit pojišťovnu, je nutné vypovědět smlouvu nejpozději 6 týdnů před jejím výročím (
+            a(href="http://business.center.cz/business/pravo/zakony/pojistna_smlouva/cast1h1.aspx") § 22 odst. 1 zák. č. 37/2004 Sb.
+            |), tedy nejpozději dne <%= anniversary.getDate() %>.<%= anniversary.getMonth() + 1 %>.<%= anniversary.getFullYear() %>.
+          <% } %>
+  //]]>

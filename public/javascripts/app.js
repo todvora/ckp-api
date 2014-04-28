@@ -1,6 +1,14 @@
 google.load("visualization", "1");
 
 // -- utils
+
+function parseCkpDate(dateStr) {
+    // date format is "YYYY-M-D"
+    var parts = dateStr.split("-");
+    var date = new Date(parts[0], (parts[1] - 1), parts[2]);
+    return  date;
+}
+
 function wrapLabelWithData(item, label) {
     return "<div title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
 }
@@ -139,12 +147,37 @@ TimelineView = Backbone.View.extend({
     }
 });
 
+ContractAnniversaryView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+
+    render: function(event) {
+        var last = this.models[this.models.length - 1];
+        var data = last.get("value");
+        if(data != null) {
+            var contractFrom = parseCkpDate(data.date_from);
+            var anniversary = new Date(new Date().getFullYear(),contractFrom.getMonth(), contractFrom.getDate() - 7*6);
+            if(anniversary.getTime() <= new Date().getTime()) {
+                anniversary.setFullYear(new Date().getFullYear() + 1);
+            }
+            var twoMonthsFromStart = new Date(contractFrom.getTime());
+            twoMonthsFromStart.setMonth(contractFrom.getMonth() + 2);
+            $("#content").append(_.template($("#panel_anniversary").html(),{'contractFrom':contractFrom, 'anniversary': anniversary, 'twoMonthsFromStart' : twoMonthsFromStart}));
+        }
+
+        return this;
+
+    }
+});
+
 var collection = new InsuranceCollectionModel();
 
 new CarInfoView({model:collection});
 new TimelineView({model: collection});
 new InsuredListView({model:collection});
 new NotInsuredListView({model:collection});
+new ContractAnniversaryView({model:collection});
 new CompaniesView({model:collection});
 
 $('#regno').keypress(function (e) {
