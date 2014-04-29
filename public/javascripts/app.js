@@ -191,6 +191,18 @@ $('#submit').click(function () {
     processForm();
 });
 
+function showLoader() {
+    var button = $("#submit");
+    button.button('loading');
+    $("#content").html("<div id='loader'><i class='fa fa-spinner fa-spin'></i> Načítám informace, chvilku prosím vyčkejte.</div>");
+}
+
+function hideLoader() {
+    var button = $("#submit");
+    button.button('reset');
+    $("#loader").remove();
+}
+
 function processForm() {
     var inputField = $("#regno");
     var regno = inputField.val();
@@ -198,15 +210,11 @@ function processForm() {
     inputField.val(regno);
     $(location).attr('hash', regno);
 
-    var button = $("#submit");
-    button.button('loading');
-
-    $("#content").html("");
-
     collection.setRegistrationNumber(regno);
+    showLoader();
     collection.fetch({
         success: function (model, response, options) {
-            button.button('reset');
+            hideLoader();
         },
         reset: true
     });
