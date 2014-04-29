@@ -42,7 +42,7 @@ var InsuranceCollectionModel = Backbone.Collection.extend({
 
 _.extend(InsuranceCollectionModel, Backbone.Events);
 
-NotInsuredListView = Backbone.View.extend({
+var NotInsuredListView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -73,7 +73,7 @@ function dateToString(date) {
     return "neuvedeno";
 }
 
-InsuredListView = Backbone.View.extend({
+var InsuredListView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -111,7 +111,7 @@ function getInsuranceCompanies(items) {
     return companies;
 }
 
-CompaniesView = Backbone.View.extend({
+var CompaniesView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -122,7 +122,7 @@ CompaniesView = Backbone.View.extend({
     }
 });
 
-CarInfoView = Backbone.View.extend({
+var CarInfoView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -134,7 +134,7 @@ CarInfoView = Backbone.View.extend({
     }
 });
 
-TimelineView = Backbone.View.extend({
+var TimelineView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -147,7 +147,7 @@ TimelineView = Backbone.View.extend({
     }
 });
 
-ContractAnniversaryView = Backbone.View.extend({
+var ContractAnniversaryView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
