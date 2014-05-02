@@ -13,6 +13,10 @@ function wrapLabelWithData(item, label) {
     return "<div title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
 }
 
+function hasAnyData(collection) {
+    return _.some(collection, function(elem){ return elem.get("value") != null });
+}
+
 function renderInsurancePopup(item) {
     var data = JSON.parse(item.attr("data-json"));
     if (data.value != null) {
@@ -47,6 +51,10 @@ var NotInsuredListView = Backbone.View.extend({
         this.model.on('reset', this.render);
     },
     render: function (event) {
+        if(!hasAnyData(this.models)) {
+            return this;
+        }
+
         var intervals = "";
         var orderedItems = this.models.slice().reverse();
         var result = [];
@@ -78,6 +86,9 @@ var InsuredListView = Backbone.View.extend({
         this.model.on('reset', this.render);
     },
     render: function (event) {
+        if(!hasAnyData(this.models)) {
+            return this;
+        }
         var orderedItems = this.models.slice().reverse();
         var result = [];
         _.each(orderedItems, function (item) {
@@ -116,8 +127,24 @@ var CompaniesView = Backbone.View.extend({
         this.model.on('reset', this.render);
     },
     render: function (event) {
+        if(!hasAnyData(this.models)) {
+            return this;
+        }
         var values = getInsuranceCompanies(this.models);
         $("#content").append(_.template($("#panel_template_companies").html(),{'companies':values, 'regno':this.regno}));
+        return this;
+    }
+});
+
+var NoDataView = Backbone.View.extend({
+    initialize: function () {
+        this.model.on('reset', this.render);
+    },
+    render: function (event) {
+        var hasAnyData = _.some(this.models, function(elem){ return elem.get("value") != null });
+        if(!hasAnyData) {
+            $("#content").append(_.template($("#panel_nodata").html(),{'regno':this.regno}));
+        }
         return this;
     }
 });
@@ -127,6 +154,9 @@ var CarInfoView = Backbone.View.extend({
         this.model.on('reset', this.render);
     },
     render: function (event) {
+        if(!hasAnyData(this.models)) {
+            return this;
+        }
         var value = _.find(this.models, function(elem){ return elem.get("value") != null });
         value = value.get("value");
         $("#content").append(_.template($("#panel_typeinfo").html(),{'vehicle':value}));
@@ -139,7 +169,9 @@ var TimelineView = Backbone.View.extend({
         this.model.on('reset', this.render);
     },
     render: function (event) {
-        var self = this;
+        if(!hasAnyData(this.models)) {
+            return this;
+        }
         $("#content").append(_.template($("#panel_timeline").html(),{}));
         var container = document.getElementById('chart');
         new InsuranceTimeline(container, this.models, renderInsurancePopup);
@@ -153,6 +185,9 @@ var ContractAnniversaryView = Backbone.View.extend({
     },
 
     render: function(event) {
+        if(!hasAnyData(this.models)) {
+            return this;
+        }
         var last = this.models[this.models.length - 1];
         var data = last.get("value");
         if(data != null) {
@@ -173,6 +208,7 @@ var ContractAnniversaryView = Backbone.View.extend({
 
 var collection = new InsuranceCollectionModel();
 
+new NoDataView({model:collection});
 new CarInfoView({model:collection});
 new TimelineView({model: collection});
 new InsuredListView({model:collection});
