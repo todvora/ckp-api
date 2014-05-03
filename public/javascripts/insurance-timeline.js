@@ -66,8 +66,14 @@ function InsuranceTimeline(el, models) {
             if (value.date_till != null) {
                 endDate = parseCkpDate(value.date_till);
             }
-
-            rows.push([startDate, endDate, buildLabel(item, value.period), "green", value.company.name.substring(0, 20)]);
+            var groupLabel = "<span title='"+value.company.name+"'>";
+            if(value.company.name.length > 20) {
+                groupLabel = groupLabel + value.company.name.substring(0, 17) + "..."
+            } else {
+                groupLabel = groupLabel + value.company.name;
+            }
+            groupLabel = groupLabel + "</span>";
+            rows.push([startDate, endDate, buildLabel(item, value.period), "green", groupLabel]);
         } else {
             var from = new Date(item.get("start"));
             var till = new Date(item.get("end"));

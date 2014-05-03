@@ -51,7 +51,7 @@ script#panel_template_companies(style='display: none')
             div.col-md-4
               h4 <%= item.name %>
               span.glyphicon.glyphicon-phone-alt
-              &nbsp;+420 <%= item.tel %>
+              | &nbsp;+420 <%= item.tel %>
               br
               span.glyphicon.glyphicon-envelope
               | &nbsp;
@@ -72,7 +72,8 @@ script#panel_timeline(style='display: none')
     //<![CDATA[
     div.row
       div.col-lg-12
-        div(id="chart" style="height:300px;")
+        div(id="chart" style="max-height:300px;")
+        p.helptext TIP: pro zobrazení podrobnějších informací najeďte myší na pole s datem.
     //]]>
 script#panel_anniversary(style='display: none')
   //<![CDATA[
