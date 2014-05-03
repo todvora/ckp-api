@@ -1,51 +1,3 @@
-script#modal_template(style='display: none')
-  //<![CDATA[
-  .modal.fade(id="insurance_tip")
-    .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type='button', data-dismiss='modal', aria-hidden='true')
-            h4.modal-title<%- data.value.manufacturer %> <%- data.value.spz %>
-          .modal-body
-            p Vozidlo bylo v období <%- data.value.period %> v pořádku pojištěno.
-            table
-              tr
-                th SPZ/RZ vozidla:
-                td <%- data.value.spz %>
-              tr
-                th Druh vozidla:
-                td <%- data.value.type %>
-              tr
-                th Výrobce:
-                td <%- data.value.manufacturer %>
-              tr
-                th Interval pojištění:
-                td <%- data.value.period %>
-              tr
-                th Pojišťovna:
-                td <%- data.value.company.name %>
-              tr
-                th Ověřovací link:
-                td
-                  a(href!="<%- data.value.url %>", target="_blank") <%- data.value.url %>
-          .modal-footer
-            button.btn.btn-default(type='button', data-dismiss='modal') Zavřít
-  //]]>
-
-script#modal_template_notinsured(style='display: none')
-  //<![CDATA[
-  .modal.fade(id="insurance_tip_notinsured")
-    .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type='button', data-dismiss='modal', aria-hidden='true')
-            h4.modal-title Nepojištěno
-          .modal-body
-            p V období od <%- new Date(data.start).getDate() %>.<%- new Date(data.start).getMonth() + 1 %>.<%- new Date(data.start).getFullYear() %> do <%- new Date(data.end).getDate() %>.<%- new Date(data.end).getMonth() + 1 %>.<%- new Date(data.end).getFullYear() %> nebylo vozidlo evidováno u žádné pojišťovny.
-          .modal-footer
-            button.btn.btn-default(type='button', data-dismiss='modal') Zavřít
-  //]]>
-
 script#panel_template_notinsured(style='display: none')
   //<![CDATA[
   div.row
@@ -82,8 +34,7 @@ script#panel_template_insured(style='display: none')
           p V těchto obdobích bylo vozidlo pojištěno:
             ul
                 != "<% _.each(intervals, function(interval) { %>"
-                  li
-                    a(href="#") <%= interval %>
+                  li <%= interval %>
                 != "<% }); %>"
   //]]>
 script#panel_template_companies(style='display: none')
@@ -153,3 +104,30 @@ script#panel_nodata(style='display: none')
           i.fa.fa-exclamation-triangle
           | &nbsp; To nevypadá dobře. Přes usilovnou shahu nebyly nalezeny žádné informace o pojištění vozidla <%= regno %>. Je registrační značka správná?
     //]]>
+
+script#tooltip_timeline(style='display: none')
+      <% if (data.value == null) { %>
+      p
+        i.fa.fa-exclamation-triangle
+        | &nbsp;V období od <%- new Date(data.start).getDate() %>.<%- new Date(data.start).getMonth() + 1 %>.<%- new Date(data.start).getFullYear() %> do <%- new Date(data.end).getDate() %>.<%- new Date(data.end).getMonth() + 1 %>.<%- new Date(data.end).getFullYear() %> nebylo vozidlo evidováno u žádné pojišťovny.
+      <% } else { %>
+      p
+        i.fa.fa-check-square
+        | &nbsp;Vozidlo v&nbsp;pořádku pojištěno.
+      table
+        tr
+          th Interval pojištění:
+          td <%- data.value.period %>
+        tr
+          th Pojišťovna:
+          td <%- data.value.company.name %>
+        tr
+          th SPZ/RZ vozidla:
+          td <%- data.value.spz %>
+        tr
+          th Druh vozidla:
+          td <%- data.value.type %>
+        tr
+          th Výrobce:
+          td <%- data.value.manufacturer %>
+      <% } %>

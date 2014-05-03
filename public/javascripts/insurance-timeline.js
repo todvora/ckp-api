@@ -1,4 +1,4 @@
-function InsuranceTimeline(el, models, clickCallback) {
+function InsuranceTimeline(el, models) {
 
     function parseCkpDate(dateStr) {
         // date format is "YYYY-M-D"
@@ -52,7 +52,7 @@ function InsuranceTimeline(el, models, clickCallback) {
     }
 
     function buildLabel(item, label) {
-        return "<div class='insurance-label' title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
+        return "<div class='insurance-label' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
     }
 
     var dataTable = createDatatable();
@@ -85,31 +85,25 @@ function InsuranceTimeline(el, models, clickCallback) {
     // Draw our timeline with the created data and options
     timeline.draw(dataTable,  getTimelineOptions());
 
-    $(".insurance-label").parent().parent().hover(function () {
-        var desiredWidth = 200;
-        if ($(this).width() < desiredWidth) {
-            var origLeft = $(this).position().left;
-            var left = origLeft;
-            if ((origLeft + desiredWidth) > $(this).parent().width()) {
-                left = origLeft - (origLeft + desiredWidth - $(this).parent().width());
-            }
-            $(this).attr("data-orig-left", origLeft);
-            $(this).attr("data-orig-width", $(this).css("width"));
-            $(this).css('z-index', 100);
-            $(this).stop().animate({
-                width: desiredWidth,
-                left: left
-            });
+    $(".insurance-label").parent().parent().hover(function (event) {
+        var data = JSON.parse($(this).find(".insurance-label").attr("data-json"));
+        var el = $("<div id='timeline-tooltip'>" + _.template($("#tooltip_timeline").html(),{'data':data}) + "</div>");
+         $("body").append(el);
+        var left = $(this).offset().left;
+        var top = $(this).offset().top + $(this).height();
+        var timelineRight = $(this).parent().offset().left + $(this).parent().width();
+        if ((left + 300) > timelineRight) {
+            left = left - (left + 300 - timelineRight) ;
         }
+        $(el)
+            .css("top", top)
+            .css("left", left)
+            .css("width", "300px");
+
     }, function () {
-        if (typeof $(this).attr("data-orig-width") != "undefined") {
-            $(this).stop().animate({
-                width: $(this).attr("data-orig-width"),
-                left: $(this).attr("data-orig-left"),
-                'z-index': 1
-            });
-        }
+        $("#timeline-tooltip").remove();
     });
 
     return timeline;
 }
+

@@ -10,26 +10,12 @@ function parseCkpDate(dateStr) {
 }
 
 function wrapLabelWithData(item, label) {
-    return "<div title='" + label + "' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
+    return "<span>" + label + "</span>";
 }
 
 function hasAnyData(collection) {
     return _.some(collection, function(elem){ return elem.get("value") != null });
 }
-
-function renderInsurancePopup(item) {
-    var data = JSON.parse(item.attr("data-json"));
-    if (data.value != null) {
-        $("#insurance_tip").remove();
-        $("body").append(_.template($("#modal_template").html(), {data: data}));
-        $('#insurance_tip').modal({});
-    } else {
-        $("#insurance_tip_notinsured").remove();
-        $("body").append(_.template($("#modal_template_notinsured").html(), {data: data}));
-        $('#insurance_tip_notinsured').modal({});
-    }
-}
-
 
 // -- models and views
 var InsuranceCollectionModel = Backbone.Collection.extend({
@@ -46,7 +32,7 @@ var InsuranceCollectionModel = Backbone.Collection.extend({
 
 _.extend(InsuranceCollectionModel, Backbone.Events);
 
-var NotInsuredListView = Backbone.View.extend({
+var InsuredListView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -66,11 +52,6 @@ var NotInsuredListView = Backbone.View.extend({
         });
 
         $("#content").append(_.template($("#panel_template_insured").html(),{'intervals':result}));
-        $("#insured ul li div").click(function(event) {
-            event.preventDefault();
-            renderInsurancePopup($(this));
-            return false;
-        });
     }
 });
 
@@ -81,7 +62,7 @@ function dateToString(date) {
     return "neuvedeno";
 }
 
-var InsuredListView = Backbone.View.extend({
+var NotInsuredListView = Backbone.View.extend({
     initialize: function () {
         this.model.on('reset', this.render);
     },
@@ -174,7 +155,7 @@ var TimelineView = Backbone.View.extend({
         }
         $("#content").append(_.template($("#panel_timeline").html(),{}));
         var container = document.getElementById('chart');
-        new InsuranceTimeline(container, this.models, renderInsurancePopup);
+        new InsuranceTimeline(container, this.models);
         return this;
     }
 });
