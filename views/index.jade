@@ -3,11 +3,33 @@ extends layout
 block content
   div.row
     div.col-lg-12
-      h1 Informace o povinném ručení vozu
+      h1 Informace o povinném ručení vozidla
       div.input-group
         input.form-control(type="text", class="form-control", id="regno", placeholder="SPZ/RZ vašeho vozu")
         span.input-group-btn
           button(type="submit", class="btn btn-primary", id="submit", data-loading-text="Načítání...") Zjistit historii pojištění
   div#content
+      div.row
+        div.col-lg-12.intro
+            div.panel.panel-default
+                div.panel-body
+                    h3 Zajímá vás, co všechno o pojištění vašeho vozu evidují pojišťovny a Česká kancelář pojistitelů?
+                    p Pokud ano, nejspíše jste zjistili, že taková informace není nikde dostupná a to nejlepší, co se dosud dalo použít,
+                      | je
+                      a(href="https://ic.ckp.cz/ICwww/servlet?_page=searchSPZ&lngID=1", target="_blank")  vyhledávací formulář na stránkách ČKP.
+                      | &nbsp;Jenže není rok 1998, a stránka by měla umět mnohem víc a vypadat zcela jinak.
+
+                    p Zkoušet den po dni zadávat registrační značku a na papír si psát, od kdy do kdy jsem byl pojištěn, ručně vyhledávat intervaly,
+                      | kdy jsem pojištěn nebyl. Takhle by to vypadat nemělo!
+
+                    p Přesně proto vznikla tato aplikace. Jednoduše zadejte vaši (nebo jakoukoliv) registrační značku a &nbsp;
+                      strong prohlédněte si celou historii pojištění, všechny změny povinného ručení, kontaktní údaje vašich pojišťoven, intervaly, kdy nebylo vozidlo pojištěno,
+                        | datum výročí smlouvy a den, kdy nejpozději je možné změnit pojišťovnu.
+                      | &nbsp; Na jedno kliknutí máte kompletní přehled a všechny důležité údaje pohromadě.
+                    p &nbsp;
+                    h3 Co se stane, až stisknu tlačítko 'Zjistit historii pojištění'?
+                    p Aplikace za vás provede všechnu tu nepříjemnou práci. Mnohokrát vyplní formulář na stránkách ČKP a načte výsledky. Projde měsíc za měsícem
+                      | historii ode dneška až do roku 2009 (vznik ČKP). Data následně vykreslí na časové ose. K tomu vám ukáže, kdy vozidlo nebylo pojištěno a mnoho dalších
+                      | užitečných informací.
 
   include includes/app_templates
