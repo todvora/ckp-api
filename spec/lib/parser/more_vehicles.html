@@ -1,0 +1,790 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/form.js" language="JavaScript"></script>
+<script src="js/formCKP.js" language="JavaScript"></script>
+<script LANGUAGE="JavaScript">
+message["empty"] = "Pole musí být vyplněné";
+message["invalidDate"] = "Datum byl rozeznán jako {0} a není platný. Formát data je {1}.";
+message["SPZ1"] = "SPZ musí obsahovat min 4 úvodní znaky následované zástupným znakem";
+message["SPZ2"] = "V SPZ se nesmí kombinovat zástupné znaky za znak _(?) se zástupnými znaky za řetězec znaků %(*)";
+message["badRpn"] = "Poznávací značka smí obsahovat pouze alfanumerické znaky.";
+message["startDate"] = "Datum dopravní nehody musí být větší než ";
+message["badEmail"] = "Zadaná emailová adresa není platná.";
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script language="JavaScript">
+
+  // nastavi jazyk a zvoli hlavni stranku
+  function setLanguage(lng){
+    var url = 'servlet?rpn=5P55555&date=23.5.2014&lngID=1&_page=resultSPZ';
+    // doplni nebo zmeni lngID
+    if (url.indexOf('?') == -1)
+      url += '?';
+    var index = url.indexOf('lngID');
+    if (index != -1) {
+      var endindex = url.indexOf('&', (index + 6));
+      url = url.substring(0, (index + 6)) + lng + (endindex >= index + 6 ? url.substring(endindex, url.length) : '');
+    }
+    else
+      url += '&lngID='+lng;
+    window.location.href = url;
+  }
+  // ohlida, jestli je vybrana nejaka polozka v kombu, nebo je nastavena ta prvni
+  function isAnyOptionSelected(what) {
+    if (what.options.selectedIndex > 0)
+      return true;
+    else {
+      alert('Vyberte některou hodnotu z nabízených položek.');
+      what.focus();
+      return false;
+    }
+  }
+  window.focus();
+</script>
+<html>
+   <head>
+      <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+      
+      <title>ČKP - Informační středisko</title>
+      <link rel="stylesheet" href="css/hMenu.css" type="text/css">
+      <link rel="stylesheet" href="css/styles.css" type="text/css">
+      <script src="js/cmenufunctions.js" type="text/javascript"></script>
+      <script src="js/selectbox.js" type="text/javascript"></script>
+      
+   </head>
+   <body bgcolor="#CCCCCC" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+    <div align="center">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr class="backgr4">
+        <td height="50" width="50%" class="no_print">&nbsp;</td>
+        <td height="50" width="760">
+            <table width="760" border="0" cellspacing="0" cellpadding="0" class="backgr4" id="header">
+                <tr>
+                    <td width="20" rowspan="2" valign="top"><a name="up"></a> </td>
+                    <td width="98" rowspan="2" class="noDec"><img src="images/logo.gif" width="76" height="50"> </td>
+                    <td width="440" rowspan="2" class="title">
+                      
+                        Informační středisko pro poškozené - Vyhledávání dle SPZ
+                      
+                    </td>
+                    <td width="202" height="25" class="info"><span class="normal"> Pátek&nbsp;23.5.2014 15:37</span> </td>
+                </tr>
+                <tr>
+                    <td width="202" class="info" valign="bottom">
+                             
+                                      <a href="javascript:setLanguage('1');"><img src="images/flag_cr.gif" width="20" height="12" border="0" class="flag"></a>
+                                    
+                                      <a href="javascript:setLanguage('2');"><img src="images/flag_gb.gif" width="20" height="12" border="0" class="flag"></a>
+                                    
+                                      <a href="javascript:setLanguage('3');"><img src="images/flag_ger.gif" width="20" height="12" border="0" class="flag"></a>
+                                    
+                                      <a href="javascript:setLanguage('4');"><img src="images/flag_fr.gif" width="20" height="12" border="0" class="flag"></a>
+                                    
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td width="50%" class="no_print">&nbsp;</td>
+    </tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td width="50%" class="no_print">&nbsp;<a name="up"></a></td>
+        <td class="backgr3">
+            <table width="760" border="0" cellspacing="0" cellpadding="1" id="menu" align="center">
+                <tr>
+                    <td class="backgr3" colspan="2" height="3"></td>
+                </tr>
+                <tr>
+                    <td width="13" class="backgr3">&nbsp;</td>
+                    <td width="743" class="menuBackground">
+                        <script language="JavaScript">
+                            hMenuLayers=3;
+                            hMenuLayerPrefix='hMenuLayer';
+                            hMenuTime=500;
+                            hMenuStartClick=false;
+                            hMenuStopClick=false;
+                        </script>
+                        <script src="js/hMenu.js" language="JavaScript"></script>
+                        <table class="menuLayer0" cellspacing="0" width="100%">
+                            <tr>
+                                <td class="menuSetClear">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td class="menuPasive0"><a href="servlet?_page=info&lngID=1" class="menuPasive0">Informace</a></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="menuSetClear">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                       <tr>
+                                          <td class="menuPasive0" id="hItem10" onmouseout="hMenuLight(hItem10,'.menuPasive0'); hMenuSetHide();" onmouseover="hMenuHide(); hMenuHClick(0);hMenuLight(hItem10,'.menuActive0')" onclick="hMenuHClick(0,'onClick',event);"><span class="menuPasive0" id="hItem10" onmouseover="hMenuLight(hItem10,'.menuActive0')" onmouseout="hMenuLight(hItem10,'.menuPasive0')">Vyhledávání<img src="images/d_arrow.gif" alt=""></span></td>
+                                       </tr>
+                                       <tr>
+                                          <td class="menuSetClear" onmouseout="hMenuLight(hItem10,'.menuPasive0'); hMenuSetHide();" onmouseover="hMenuLight(hItem10,'.menuActive0'); hMenuClearHide ();">
+                                             <div style="position: absolute; visibility: hidden;" id="hMenuLayer0">
+                                                <table cellspacing="0" class="menuLayer1">
+                                                   <tr onmouseover="hMenuLight(hItem11,'.menuActive1')" onmouseout="hMenuLight(hItem11,'.menuPasive1')">
+                                                      <td class="menuPasive1" id="hItem11">
+                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                               <td nowrap width="100%"><a class="menuPasive1" href="servlet?_page=searchSPZ&lngID=1" id="hItem11">Vyhledávání dle SPZ</a>
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                   <tr onmouseover="hMenuLight(hItem12,'.menuActive1')" onmouseout="hMenuLight(hItem12,'.menuPasive1')">
+                                                      <td class="menuPasive1" id="hItem12">
+                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                               <td nowrap width="100%"><a class="menuPasive1" href="servlet?_page=mainForm&lngID=1" id="hItem12">Komplexní vyhledávání</a>
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                </table>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </table>
+                                </td>
+                                <td class="menuSetClear">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                       <tr>
+                                          <td class="menuPasive0" id="hItem20" onmouseout="hMenuLight(hItem20,'.menuPasive0'); hMenuSetHide();" onmouseover="hMenuHide(); hMenuHClick(1);hMenuLight(hItem20,'.menuActive0')" onclick="hMenuHClick(1,'onClick',event);"><span class="menuPasive0" id="hItem20" onmouseover="hMenuLight(hItem20,'.menuActive0')" onmouseout="hMenuLight(hItem20,'.menuPasive0')">Škodní zástupci<img src="images/d_arrow.gif" alt=""></span></td>
+                                       </tr>
+                                       <tr>
+                                          <td class="menuSetClear" onmouseout="hMenuLight(hItem20,'.menuPasive0'); hMenuSetHide();" onmouseover="hMenuLight(hItem20,'.menuActive0'); hMenuClearHide ();">
+                                             <div style="position: absolute; visibility: hidden;" id="hMenuLayer1">
+                                                <table cellspacing="0" class="menuLayer1">
+                                                   <tr onmouseover="hMenuLight(hItem21,'.menuActive1')" onmouseout="hMenuLight(hItem21,'.menuPasive1')">
+                                                      <td class="menuPasive1" id="hItem21">
+                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                               <td nowrap width="100%"><a class="menuPasive1" href="servlet?_page=infoDeputy&lngID=1" id="hItem21">Informace</a>
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                   <tr onmouseover="hMenuLight(hItem22,'.menuActive1')" onmouseout="hMenuLight(hItem22,'.menuPasive1')">
+                                                      <td class="menuPasive1" id="hItem22">
+                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                               <td nowrap width="100%"><a class="menuPasive1" href="servlet?_page=searchDeputy&lngID=1" id="hItem22">Vyhledávání - pro české pojistitele v zahraničí</a>
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                   <tr onmouseover="hMenuLight(hItem23,'.menuActive1')" onmouseout="hMenuLight(hItem23,'.menuPasive1')">
+                                                      <td class="menuPasive1" id="hItem23">
+                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                               <td nowrap width="100%"><a class="menuPasive1" href="servlet?_page=searchIntDeputy&lngID=1" id="hItem23">Vyhledávání - pro zahraniční pojistitele v ČR</a>
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                </table>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </table>
+                                </td>
+                                <td class="menuSetClear">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                       <tr>
+                                          <td class="menuPasive0" id="hItem30" onmouseout="hMenuLight(hItem30,'.menuPasive0'); hMenuSetHide();" onmouseover="hMenuHide(); hMenuHClick(2);hMenuLight(hItem30,'.menuActive0')" onclick="hMenuHClick(2,'onClick',event);"><span class="menuPasive0" id="hItem30" onmouseover="hMenuLight(hItem30,'.menuActive0')" onmouseout="hMenuLight(hItem30,'.menuPasive0')">Elektronická hlášení<img src="images/d_arrow.gif" alt=""></span></td>
+                                       </tr>
+                                       <tr>
+                                          <td class="menuSetClear" onmouseout="hMenuLight(hItem30,'.menuPasive0'); hMenuSetHide();" onmouseover="hMenuLight(hItem30,'.menuActive0'); hMenuClearHide ();">
+                                             <div style="position: absolute; visibility: hidden;" id="hMenuLayer2">
+                                                <table cellspacing="0" class="menuLayer1">
+                                                   <tr onmouseover="hMenuLight(hItem31,'.menuActive1')" onmouseout="hMenuLight(hItem31,'.menuPasive1')">
+                                                      <td class="menuPasive1" id="hItem31">
+                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                               <td nowrap width="100%"><a class="menuPasive1" href="servlet?_page=newClaimantReportForPerson&lngID=1" id="hItem31">Oznámení poškozeného - pro občany</a>
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                   <tr onmouseover="hMenuLight(hItem32,'.menuActive1')" onmouseout="hMenuLight(hItem32,'.menuPasive1')">
+                                                      <td class="menuPasive1" id="hItem32">
+                                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                               <td nowrap width="100%"><a class="menuPasive1" href="servlet?_page=newClaimantReportForInsurer&lngID=1" id="hItem32">Oznámení poškozeného - pro pojistitele</a>
+                                                               </td>
+                                                            </tr>
+                                                         </table>
+                                                      </td>
+                                                   </tr>
+                                                </table>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    </table>
+                                </td>
+                                <td class="menuSetClear">
+                                    <table border="0" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td class="menuPasive0"><a href="servlet?_page=help&lngID=1" class="menuPasive0">Nápověda</a></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td width="50%" class="no_print">&nbsp;</td>
+    </tr>
+    <tr xmlns:fo="http://www.w3.org/1999/XSL/Format">
+        <td width="50%" class="no_print"></td>
+        <td width="760" class="backgr5">
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr class="no_print">
+                    <td colspan="3" class="backgr3" height="8"></td>
+                </tr>
+                <tr class="no_print">
+                    <td colspan="3" height="14"></td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+
+
+
+
+
+
+
+
+
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" class="no_print">
+      <form action="servlet;jsessionid=94d5d38fcd23ae69ec4854682e7d?" name="form" method="post"
+            onSubmit="return send();">
+          <input type="hidden" id="page" name="_page" value="resultSPZ">
+          <input type="hidden" id="lng" name="lngID" value="1">
+          <tr>
+            <td rowspan="8" width="14"></td>
+            <td colspan="2" class="backgr paddingAll">
+                <ul>
+                    <li> Do níže uvedeného formuláře vyplňte údaje potřebné pro nalezení pojistitele: </li>
+                    <li>
+                        <span class="warning">Upozornění:</span>
+                        Položky označené&nbsp;<span class="req"></span>&nbsp;jsou povinné.
+                    </li>
+                </ul>
+            </td>
+          </tr>
+          <tr>
+              <td height="14"></td>
+          </tr>
+          <tr>
+      
+              <td align="right" class="backgr">
+                  <span class="bold">SPZ vozidla:</span><span class="req"></span>&nbsp;
+              </td>
+              <td>
+                <input type="text" name="rpn" size="20" value="5P55555" maxlength="20">
+                <span class="tip">Pouze alfanumerické znaky bez mezer, pomlček apod. </span>
+              </td>
+          </tr>
+          <tr>
+      
+              <td align="right" nowrap class="backgr">
+                <span class="bold">pojištění odpovědnosti k datu:</span><span class="req"></span>&nbsp;
+              </td>
+              <td>
+                  <input type="text" name="date" size="20" value="23.5.2014" maxlength="10">
+                  <span class="tip">Formát DD.MM.RR nebo DD.MM.RRRR</span>
+              </td>
+          </tr>
+          <tr>
+              <td height="6"></td>
+              <td class="backgr"></td>
+          </tr>
+          <tr>
+              <td>&nbsp;</td>
+              <td class="backgr" >
+                  <input type="submit" name="" value="Hledat">
+                  <input type="button"  onclick="clearAll();" name="" value="Vyprázdnit">
+              </td>
+          </tr>
+        </form>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" id="print_header">
+          <tr>
+              <td><img src="images/logo_print.gif" width="71" height="30" vspace="2" border="0"></td>
+              <td align="right" class="info" valign="bottom">
+                  <div style="padding-bottom:6px;">Pátek&nbsp;23.5.2014 15:37</div>ČKP - Informační středisko
+              </td>
+          </tr>
+          <tr>
+              <td class="titleline" colspan="3"><img src="images/none.gif"></td>
+          </tr>
+          <tr>
+              <td colspan="3" class="title">Výsledek vyhledávání dle SPZ vozidla</td>
+          </tr>
+          <tr>
+              <td class="titleline" colspan="3"><img src="images/none.gif"></td>
+          </tr>
+        </table>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+              <td colspan="4" height="3" width="100%" class="backgr3"></td>
+          </tr>
+          <tr>
+              <td rowspan="2" class="no_print spaceL"></td>
+              <td class="rs_title">Výsledek vyhledávání</td>
+              <td align="right" class="backgr3 no_print" style="padding-bottom:3px;">
+                  <a href="javascript:print();" class="menu" title="Vytiskne stránku bez navigačních prvků, kontrolu můžete provést funkcí &#39;Náhled...&#39; prohlížeče.">
+                      Vytisknout</a>&nbsp;
+              </td>
+          </tr>
+          <tr>
+              <td width="99%" colspan="2" class="paddingAll">
+                  <ul class="rsInfo">
+                      <li>
+                          Zobrazené informace vyhovují zadaným údajům:
+                              SPZ vozidla ve smlouvě:
+                          <span class="bold">5P55555</span>,
+                              Pojištění odpovědnosti účinné k datu:
+                          <span class="bold">23.5.2014</span>
+                      </li>
+                      <li>
+                          <span class="warning">Upozornění:</span>
+                              uvedené informace jsou převzaté od jednotlivých pojistitelů a mají pouze informativní charakter.
+                      </li>
+                  </ul><br>
+              </td>
+          </tr>
+        </table>
+        <TABLE border=0 cellSpacing=0 cellpadding="4" width="100%">
+          <TBODY>
+            <TR class=backgr>
+                <td class="no_print">&nbsp;</td>
+                <TD nowrap class="labelH">SPZ vozidla </TD>
+                <TD nowrap class="labelH">Druh vozidla</TD>
+                <TD nowrap class="labelH">Tovární značka</TD>
+                <TD nowrap class="labelH">Pojistitel</TD>
+                <TD nowrap class="labelH">Pojištění od – do</TD>
+            </TR>
+            <tr>
+                <td class="backgr no_print"></td>
+                <td colspan="5" height="7"></td>
+            </tr>
+
+            
+              
+              <tr class="backgr">
+                  <td class="no_print"></td>
+                  <td valign="top"><span class="bold">5P55555<!--xtags:valueOf select="@rpn"/--></span></td>
+
+                  <td valign="top">
+                    
+                      OSOBNÍ AUTOMOBILY
+                      
+                    
+                  </td>
+
+
+
+                  <td valign="top">PEUGEOT</td>
+                  <td valign="top">
+                    <p>
+                      ČSOB POJIŠŤOVNA, A.S.<br>
+                    
+                        <span class="add_info">
+                        
+                          &nbsp;tel.:&nbsp;
+                          
+            
+                            
+            
+                            
+            
+                            
+                              800100777<br>
+                            
+                          
+                        
+                          &nbsp;e-mail:&nbsp;
+                          
+            
+                            
+                              <a href="mailto:info@csobpoj.cz">info@csobpoj.cz</a><br>
+                            
+            
+                            
+            
+                            
+                          
+                        
+                          &nbsp;WWW:&nbsp;
+                          
+            
+                            
+            
+                            
+                              <a href="http://www.csobpoj.cz">http://www.csobpoj.cz</a>
+                            
+            
+                            
+                          
+                        
+                        </span>
+                    </p>
+
+                  </td>
+                  <td valign="top">1.8.2013&nbsp;-&nbsp;neuvedeno
+
+
+
+
+              </tr>
+              <tr class="no_display">
+                  <td height="8"></td>
+              </tr>
+              <tr>
+                  <td class="no_print"></td>
+                  <td height="8" colspan="9" background="images/dot.gif" class="rsline"><img src="images/none.gif" width="1" height="1"></td>
+              </tr>
+            
+              
+              <tr class="backgr">
+                  <td class="no_print"></td>
+                  <td valign="top"><span class="bold">5P55555<!--xtags:valueOf select="@rpn"/--></span></td>
+
+                  <td valign="top">
+                    
+                      OSOBNÍ AUTOMOBILY
+                      
+                    
+                  </td>
+
+
+
+                  <td valign="top">ŠKODA</td>
+                  <td valign="top">
+                    <p>
+                      ČESKÁ PODNIKATELSKÁ POJIŠŤOVNA, A.S., VIENNA INSURANCE GROUP<br>
+                    
+                        <span class="add_info">
+                        
+                          &nbsp;tel.:&nbsp;
+                          
+            
+                            
+            
+                            
+            
+                            
+                              841444555<br>
+                            
+                          
+                        
+                          &nbsp;e-mail:&nbsp;
+                          
+            
+                            
+                              <a href="mailto:info@cpp.cz">info@cpp.cz</a><br>
+                            
+            
+                            
+            
+                            
+                          
+                        
+                          &nbsp;WWW:&nbsp;
+                          
+            
+                            
+            
+                            
+                              <a href="http://www.cpp.cz">http://www.cpp.cz</a>
+                            
+            
+                            
+                          
+                        
+                        </span>
+                    </p>
+
+                  </td>
+                  <td valign="top">6.6.2012&nbsp;-&nbsp;neuvedeno
+
+
+
+
+              </tr>
+              <tr class="no_display">
+                  <td height="8"></td>
+              </tr>
+              <tr>
+                  <td class="no_print"></td>
+                  <td height="8" colspan="9" background="images/dot.gif" class="rsline"><img src="images/none.gif" width="1" height="1"></td>
+              </tr>
+            
+              
+              <tr class="backgr">
+                  <td class="no_print"></td>
+                  <td valign="top"><span class="bold">5P55555<!--xtags:valueOf select="@rpn"/--></span></td>
+
+                  <td valign="top">
+                    
+                      OSOBNÍ AUTOMOBILY
+                      
+                    
+                  </td>
+
+
+
+                  <td valign="top">MERCEDES-BENZ</td>
+                  <td valign="top">
+                    <p>
+                      KOOPERATIVA, POJIŠŤOVNA, A.S., VIENNA INSURANCE GROUP<br>
+                    
+                        <span class="add_info">
+                        
+                          &nbsp;tel.:&nbsp;
+                          
+            
+                            
+            
+                            
+            
+                            
+                              841105105<br>
+                            
+                          
+                        
+                          &nbsp;tel.:&nbsp;
+                          
+            
+                            
+            
+                            
+            
+                            
+                              272112111<br>
+                            
+                          
+                        
+                          &nbsp;fax:&nbsp;
+                          
+            
+                            
+            
+                            
+            
+                            
+                              272112148<br>
+                            
+                          
+                        
+                          &nbsp;e-mail:&nbsp;
+                          
+            
+                            
+                              <a href="mailto:info@koop.cz">info@koop.cz</a><br>
+                            
+            
+                            
+            
+                            
+                          
+                        
+                          &nbsp;e-mail:&nbsp;
+                          
+            
+                            
+                              <a href="mailto:greencard@koop.cz">greencard@koop.cz</a><br>
+                            
+            
+                            
+            
+                            
+                          
+                        
+                          &nbsp;WWW:&nbsp;
+                          
+            
+                            
+            
+                            
+                              <a href="http://www.koop.cz">http://www.koop.cz</a>
+                            
+            
+                            
+                          
+                        
+                        </span>
+                    </p>
+
+                  </td>
+                  <td valign="top">10.10.2012&nbsp;-&nbsp;9.10.2014
+
+
+
+
+              </tr>
+              <tr class="no_display">
+                  <td height="8"></td>
+              </tr>
+              <tr>
+                  <td class="no_print"></td>
+                  <td height="8" colspan="9" background="images/dot.gif" class="rsline"><img src="images/none.gif" width="1" height="1"></td>
+              </tr>
+            
+          </tbody>
+        </table>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+              <td rowspan="5"><img src="images/none.gif" width="14"></td>
+              <td colspan="3"></td>
+          </tr>
+          <tr>
+              <td colspan="3" class="paddingAll">
+                  <ul class="rsInfo">
+                      
+                      <li> V dané věci se dále obraťte na výše zobrazeného pojistitele. 
+
+                               
+                      </li>
+                      
+                  </ul><br>
+              </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+</table>
+
+
+<script language="JavaScript">
+  function setLanguage(lng){
+     document.forms[0].lng.value = lng;
+     document.forms[0].page.value = 'resultSPZ';
+     document.forms[0].submit();
+  }
+
+  function send(){
+    document.all('rpn').tests=new Array(removeSpaces,testEmpty,removeOuterSpaces, removeVildcards, testSPZWithoutVildCards);
+    document.all('date').tests=new Array(removeSpaces,testEmpty,removeOuterSpaces,testDate);
+    document.all('date').format="dd.mm.yyyy";
+    if (testAll(document.form)) {
+      return true;
+      //document.form.submit();
+    }
+    else
+      return false;
+  }
+
+  function clearAll() {
+    document.form.rpn.value = '';
+    document.form.date.value = '';
+  }
+
+// kurzor na prvni pole
+  if (document.form.rpn != null)
+    document.form.rpn.focus();
+
+</script>
+
+
+
+
+
+                  </td>
+                </tr>
+                <tr class="no_print">
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+                
+                <tr id="footer">
+                  
+                  <td colspan="3">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr class="backgr">
+                                <td class="backgr5" height="21" width="14">&nbsp;</td>
+                                <td class="tip backgr">&nbsp;&nbsp;ČKP - Informační středisko
+                                    2.3.0.0 (20130108)
+                                    
+                                </td>
+                                <td class="tip backgr" align="right">Vaše IP adresa je:&nbsp;178.190.228.245&nbsp;</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" height="3" class="backgr2"></td>
+                </tr>
+            </table>
+        </td>
+        <td width="50%" class="no_print">&nbsp;</td>
+    </tr>
+</table>
+
+</div>
+</body>
+</html>

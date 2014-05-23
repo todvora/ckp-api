@@ -233,6 +233,10 @@ function processForm() {
         success: function (model, response, options) {
             hideLoader();
         },
+        error: function(collection, response, options) {
+            hideLoader();
+            console.log(response);
+        },
         reset: true
     });
 }
