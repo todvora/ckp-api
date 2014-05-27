@@ -15,13 +15,13 @@ describe(__filename, function () {
         filename = path.resolve(__dirname, "ckp_more_vehicles.html");
         fs.readFile(filename, function (err, data) {
             if (err) throw err;
-            callback(data);
+            callback(null, data);
         });
     });
 
 
     it("should parse CKP search page with inconsistent data - more vehicles, same reg. number", function (done) {
-        client.search("5P55555", "23.5.2014", function (results) {
+        client.search("5P55555", "23.5.2014", function (error, results) {
 
             expect(results).toBeDefined();
             expect(results.count).toBe(3);

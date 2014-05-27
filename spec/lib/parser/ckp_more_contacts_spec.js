@@ -15,13 +15,13 @@ describe(__filename, function () {
         filename = path.resolve(__dirname, "ckp_more_contacts.html");
         fs.readFile(filename, function (err, data) {
             if (err) throw err;
-            callback(data);
+            callback(null, data);
         });
     });
 
 
     it("should parse CKP search page with more contact details", function (done) {
-        client.search("9A99330", "30.3.2014", function (results) {
+        client.search("9A99330", "30.3.2014", function (error, results) {
             expect(results).toBeDefined();
             expect(results.count).toBe(1);
             expect(results.results.length).toBe(1);
