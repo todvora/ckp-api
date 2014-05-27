@@ -20,17 +20,19 @@ module.exports = function (app) {
         if(typeof CACHE[regno] !== "undefined") {
             render(req, res, CACHE[regno]);
         } else {
-            var callback = function (results) {
-                CACHE[regno] = results;
-                if (CACHE.length > CACHE_SIZE) {
-                    CACHE.shift()
+            var callback = function (error, results) {
+                if (error) {
+                    res.send(500, { 'message': error.message, 'data':error.data});
+                } else {
+                    CACHE[regno] = results;
+                    if (CACHE.length > CACHE_SIZE) {
+                        CACHE.shift()
+                    }
+                    render(req, res, results);
                 }
-                render(req, res, results);
             };
-            var errorCallback = function(message, errorData) {
-                res.send(500, { 'message': message, 'data':errorData });
-            };
-            aggregatorClient.search(regno, date, callback, errorCallback);
+
+            aggregatorClient.search(regno, date, callback);
         }
     });
 };
