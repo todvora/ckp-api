@@ -12,7 +12,7 @@ describe(__filename, function () {
     client.setPageLoader(function (url, callback) {
 
 
-        filename = path.resolve(__dirname, "ckp_page.html");
+        filename = path.resolve(__dirname, "ckp_default.html");
         fs.readFile(filename, function (err, data) {
             if (err) throw err;
             callback(data);
