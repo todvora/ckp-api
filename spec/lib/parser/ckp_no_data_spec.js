@@ -22,7 +22,9 @@ describe(__filename, function () {
 
     it("should parse CKP search page with no result data", function (done) {
         client.search("2K2063", "27.5.2014", function (results) {
-            expect(results).toEqual([]);
+            expect(results).toBeDefined();
+            expect(results.count).toBe(0);
+            expect(results.results.length).toBe(0);
             done();
         });
     });

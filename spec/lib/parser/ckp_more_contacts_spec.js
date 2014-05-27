@@ -22,11 +22,16 @@ describe(__filename, function () {
 
     it("should parse CKP search page with more contact details", function (done) {
         client.search("9A99330", "30.3.2014", function (results) {
-            expect(results.company.name).toEqual("ALLIANZ POJIŠŤOVNA, A.S.");
-            expect(results.company.tel).toEqual(["800170000", "224405111"]);
-            expect(results.company.fax).toEqual("242455512");
-            expect(results.company.email).toEqual(["international.claims@allianz.cz","hlaseni-motor@allianz.cz"]);
-            expect(results.company.web).toEqual("http://www.allianz.cz");
+            expect(results).toBeDefined();
+            expect(results.count).toBe(1);
+            expect(results.results.length).toBe(1);
+            var result = results.results[0];
+
+            expect(result.company.name).toEqual("ALLIANZ POJIŠŤOVNA, A.S.");
+            expect(result.company.tel).toEqual(["800170000", "224405111"]);
+            expect(result.company.fax).toEqual("242455512");
+            expect(result.company.email).toEqual(["international.claims@allianz.cz","hlaseni-motor@allianz.cz"]);
+            expect(result.company.web).toEqual("http://www.allianz.cz");
             done();
         });
     });

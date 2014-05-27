@@ -235,7 +235,7 @@ function processForm() {
         },
         error: function(collection, response, options) {
             hideLoader();
-            console.log(response);
+            $("#content").append(_.template($("#panel_error").html(),{'error':response.responseJSON}));
         },
         reset: true
     });

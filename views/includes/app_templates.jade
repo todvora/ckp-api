@@ -132,3 +132,11 @@ script#tooltip_timeline(style='display: none')
           th Výrobce:
           td <%- data.value.manufacturer %>
       <% } %>
+
+
+script#panel_error(style='display: none')
+    div.row.nodata
+        div.col-lg-12
+            div.alert.alert-danger
+                i.fa.fa-exclamation-triangle
+                | &nbsp; Nastala chyba: <%- error.message  %>

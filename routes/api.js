@@ -1,8 +1,7 @@
-var ckp = require("../lib/parser/ckp");
-var client = new ckp.Client();
 var aggregator = require("../lib/parser/aggregator");
 var aggregatorClient = new aggregator.Client();
 
+var CACHE_SIZE = 50;
 var CACHE = {};
 
 module.exports = function (app) {
@@ -21,13 +20,20 @@ module.exports = function (app) {
         if(typeof CACHE[regno] !== "undefined") {
             render(req, res, CACHE[regno]);
         } else {
-            aggregatorClient.search(regno, date, function (results) {
+            var callback = function (results) {
                 CACHE[regno] = results;
-                if(CACHE.length > 50) {
+                if (CACHE.length > CACHE_SIZE) {
                     CACHE.shift()
                 }
                 render(req, res, results);
-            });
+            };
+            var errorCallback = function(message, errorData) {
+                console.log("error handling callback");
+                console.log(message);
+                console.log(errorData);
+                res.send(500, { 'message': message, 'data':errorData });
+            };
+            aggregatorClient.search(regno, date, callback, errorCallback);
         }
     });
-}
+};

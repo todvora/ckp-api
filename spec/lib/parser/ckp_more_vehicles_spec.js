@@ -22,9 +22,12 @@ describe(__filename, function () {
 
     it("should parse CKP search page with inconsistent data - more vehicles, same reg. number", function (done) {
         client.search("5P55555", "23.5.2014", function (results) {
-            expect(results.length).toEqual(3);
 
-            var first = results[0];
+            expect(results).toBeDefined();
+            expect(results.count).toBe(3);
+            expect(results.results.length).toBe(3);
+
+            var first = results.results[0];
             expect(first.spz).toEqual("5P55555");
             expect(first.manufacturer).toEqual("PEUGEOT");
             expect(first.type).toEqual("OSOBNÍ AUTOMOBILY");
@@ -36,7 +39,7 @@ describe(__filename, function () {
             expect(first.company.fax).toBeNull();
             expect(first.url).toEqual("https://ic.ckp.cz/ICwww/servlet?_page=resultSPZ&lngID=1&rpn=5P55555&date=23.5.2014");
 
-            var second = results[1];
+            var second = results.results[1];
             expect(second.spz).toEqual("5P55555");
             expect(second.manufacturer).toEqual("ŠKODA");
             expect(second.type).toEqual("OSOBNÍ AUTOMOBILY");
@@ -49,7 +52,7 @@ describe(__filename, function () {
             expect(second.company.fax).toBeNull();
             expect(second.url).toEqual("https://ic.ckp.cz/ICwww/servlet?_page=resultSPZ&lngID=1&rpn=5P55555&date=23.5.2014");
 
-            var third = results[2];
+            var third = results.results[2];
             expect(third.spz).toEqual("5P55555");
             expect(third.manufacturer).toEqual("MERCEDES-BENZ");
             expect(third.type).toEqual("OSOBNÍ AUTOMOBILY");
