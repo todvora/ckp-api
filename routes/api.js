@@ -28,9 +28,6 @@ module.exports = function (app) {
                 render(req, res, results);
             };
             var errorCallback = function(message, errorData) {
-                console.log("error handling callback");
-                console.log(message);
-                console.log(errorData);
                 res.send(500, { 'message': message, 'data':errorData });
             };
             aggregatorClient.search(regno, date, callback, errorCallback);
