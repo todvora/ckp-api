@@ -11,7 +11,8 @@
         "jade": "*",
         "less-middleware": "~0.1.15",
         "cheerio": "0.13.x",
-        "request": "*"
+        "request": "2.36.0",
+        "node-uuid": "1.4.1"
     },
     "devDependencies": {
         "jasmine-node": ">= 1.0.26"

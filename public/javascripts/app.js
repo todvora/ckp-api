@@ -24,9 +24,7 @@ var InsuranceCollectionModel = Backbone.Collection.extend({
         return this;
     },
     url: function () {
-        var currentDate = new Date();
-        var formatedDate = currentDate.getDate() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getFullYear();
-        return "/api?&regno=" + this.regno + "&date=" + formatedDate;
+        return "/api?regno=" + this.regno;
     }
 });
 

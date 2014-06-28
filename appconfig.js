@@ -36,3 +36,5 @@ module.exports.getIp = function () {
 module.exports.getPort = function () {
     return process.env.OPENSHIFT_NODEJS_PORT || 8080;
 };
+
+module.exports.analyticsCode = "UA-16579566-13";

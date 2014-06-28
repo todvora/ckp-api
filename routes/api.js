@@ -1,4 +1,8 @@
 var aggregator = require("../lib/parser/aggregator");
+var analytics = require("../lib/analytics/analytics");
+var config = require('../appconfig');
+
+
 var aggregatorClient = new aggregator.Client();
 
 var CACHE_SIZE = 50;
@@ -16,7 +20,7 @@ module.exports = function (app) {
 
     app.get('/api', function (req, res) {
         var regno = req.query["regno"];
-        var date = req.query["date"];
+        analytics.logRequest(config.analyticsCode, req);
         if(typeof CACHE[regno] !== "undefined") {
             render(req, res, CACHE[regno]);
         } else {
@@ -32,7 +36,7 @@ module.exports = function (app) {
                 }
             };
 
-            aggregatorClient.search(regno, date, callback);
+            aggregatorClient.search(regno, callback);
         }
     });
 };
