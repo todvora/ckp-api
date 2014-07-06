@@ -42,14 +42,14 @@ function InsuranceTimeline(el, models) {
         return row;
     }
 
-    function getOnclickEvent(event) {
-        var row = getTimelineSelectedItem();
-        if (row != undefined) {
-            var item = $(dataTable.getValue(row, 2));
-            clickCallback(item);
-        }
-        return false;
-    }
+//    function getOnclickEvent(event) {
+//        var row = getTimelineSelectedItem();
+//        if (row != undefined) {
+//            var item = $(dataTable.getValue(row, 2));
+//            clickCallback(item);
+//        }
+//        return false;
+//    }
 
     function buildLabel(item, label) {
         return "<div class='insurance-label' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
@@ -86,7 +86,7 @@ function InsuranceTimeline(el, models) {
     // Instantiate our timeline object.
     var timeline = new links.Timeline(el);
 
-    google.visualization.events.addListener(timeline, 'select', getOnclickEvent);
+//    google.visualization.events.addListener(timeline, 'select', getOnclickEvent);
 
     // Draw our timeline with the created data and options
     timeline.draw(dataTable,  getTimelineOptions());
