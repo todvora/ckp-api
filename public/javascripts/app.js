@@ -221,7 +221,7 @@ function hideLoader() {
 function processForm() {
     var inputField = $("#regno");
     var regno = inputField.val();
-    regno = regno.toUpperCase().trim();
+    regno = regno.toUpperCase().trim().replace(/ /g,'');
     inputField.val(regno);
     $(location).attr('hash', regno);
 

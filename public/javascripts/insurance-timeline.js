@@ -1,12 +1,5 @@
 function InsuranceTimeline(el, models) {
 
-    function parseCkpDate(dateStr) {
-        // date format is "YYYY-M-D"
-        var parts = dateStr.split("-");
-        var date = new Date(parts[0], (parts[1] - 1), parts[2]);
-        return  date;
-    }
-
     function createDatatable() {
         var dataTable = new google.visualization.DataTable();
         dataTable.addColumn({ type: 'datetime', id: 'start' });
@@ -55,29 +48,26 @@ function InsuranceTimeline(el, models) {
         return "<div class='insurance-label' data-json='" + JSON.stringify(item.toJSON()) + "'>" + label + "</div>";
     }
 
+    function shortText(text, length) {
+        if(text.length > length) {
+            return text.substring(0, 17) + "..."
+        } else {
+            return text;
+        }
+    }
+
     var dataTable = createDatatable();
 
     var rows = [];
     _.each(models, function (item) {
+        var from = new Date(item.get("start"));
+        var till = new Date(item.get("end"));
         if (item.get("value") != null) {
             var value = item.get("value");
-            var startDate = parseCkpDate(value.date_from);
-            var endDate = new Date();
-            if (value.date_till != null) {
-                endDate = parseCkpDate(value.date_till);
-            }
-            var groupLabel = "<span title='"+value.company.name+"'>";
-            if(value.company.name.length > 20) {
-                groupLabel = groupLabel + value.company.name.substring(0, 17) + "..."
-            } else {
-                groupLabel = groupLabel + value.company.name;
-            }
-            groupLabel = groupLabel + "</span>";
-            rows.push([startDate, endDate, buildLabel(item, value.period), "green", groupLabel]);
+            var groupLabel = "<span title='"+value.company.name+"'>"+shortText(value.company.name, 20)+"</span>";
+            rows.push([from, till, buildLabel(item, value.period), "green", groupLabel]);
         } else {
-            var from = new Date(item.get("start"));
-            var till = new Date(item.get("end"));
-            rows.push([from, till, buildLabel(item, dateToString(from) + "-" + dateToString(till)), "red", "Nepojištěno"]);
+            rows.push([from, till, buildLabel(item, dateToString(from) + " - " + dateToString(till)), "red", "Nepojištěno"]);
         }
     });
 
