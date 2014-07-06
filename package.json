@@ -15,6 +15,6 @@
         "node-uuid": "1.4.1"
     },
     "devDependencies": {
-        "jasmine-node": ">= 1.0.26"
+        "jasmine-node": "1.14.2"
     }
 }
