@@ -5,10 +5,13 @@ block content
     div.col-lg-12
       h1 Informace o povinném ručení vozidla
         small &nbsp beta verze
+      div.alert.alert-danger
+        i.fa.fa-exclamation-triangle
+        | &nbsp; Služba je dočasně mimo provoz. ČKP úmyslně blokuje požadavky na získávání dat a proto vám zde nemohu poskytnout informace o vašem pojištění.
       div.input-group
-        input.form-control(type="text", class="form-control", id="regno", placeholder="SPZ/RZ vašeho vozu")
+        input.form-control(type="text", class="form-control", id="regno", placeholder="SPZ/RZ vašeho vozu", disabled="true")
         span.input-group-btn
-          button(type="submit", class="btn btn-primary", id="submit", data-loading-text="Načítání...") Zjistit historii pojištění
+          button(type="submit", class="btn btn-primary", id="submit", data-loading-text="Načítání...", disabled="true") Zjistit historii pojištění
   div#content
       div.row
         div.col-lg-12.intro
